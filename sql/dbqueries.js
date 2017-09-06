@@ -18,4 +18,15 @@ let addNewUser = (data) => {
     });
 };
 
+let getHash = (email) => {
+    return db.query("SELECT pw, email, id FROM users WHERE email = ($1);", email, (err, results) => {
+        if(err) {
+            console.log(err);
+        } else {
+            return results;
+        }
+    });
+};
+
+module.exports.getHash = getHash;
 module.exports.addNewUser = addNewUser;

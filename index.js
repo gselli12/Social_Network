@@ -1,44 +1,82 @@
 const express = require('express');
 const app = express();
-const compression = require('compression');
-const {hashPassword, checkPassword} = require("./hashing.js");
-const {addNewUser} = require("./sql/dbqueries.js");
-const bodyParser = require('body-parser');
-var cookieSession = require("cookie-session");
-var cookieParser = require("cookie-parser");
+const {hashPassword, checkPassword} = require("./Config/hashing.js");
+const {addNewUser, getHash} = require("./sql/dbqueries.js");
+const {middleware} = require("./express/middleware.js");
 
 
-app.use(cookieSession({
-    name: "session",
-    keys: ['id', 'email']
-}));
 
-app.use(cookieParser());
-
-app.use(bodyParser.json());
-
-app.use(compression());
+//MIDDLEWARE
+app.use(express.static(__dirname + '/public'));
 
 if (process.env.NODE_ENV != 'production') {
     app.use(require('./build'));
 }
 
-app.use(express.static('./public'));
+middleware(app);
 
-app.get("/test", (req, res) => {
-    console.log(req.session);
+
+//ROUTES
+
+app.get("/", (req, res) => {
+    console.log("req.session", req.session);
     if(!req.session.user) {
         return res.redirect("/welcome");
     }
     res.sendFile(__dirname + "/public/index.html");
 });
 
+
 app.get("/welcome", (req, res) => {
-    console.log(req.session);
+    console.log("req.session.user", req.session.user);
     if(req.session.user) {
         return res.redirect("/");
     }
     res.sendFile(__dirname + "/public/index.html");
+});
+
+app.get("/login", (req, res) => {
+    console.log("req.session.user", req.session.user);
+    if(req.session.user) {
+        return res.redirect("/");
+    }
+    res.sendFile(__dirname + "/public/index.html");
+});
+
+app.post("/login" , (req, res) => {
+
+    let email = [req.body.email];
+    let pw = req.body.pw;
+
+    getHash(email)
+        .then((hash) => {
+            console.log(hash.rows[0].pw);
+            let id = hash.rows[0].id;
+            let email = hash.rows[0].email;
+            checkPassword(pw, hash.rows[0].pw)
+                .then((result) => {
+                    if(result) {
+                        req.session.user = {
+                            id: id,
+                            email: email
+                        };
+                        res.json({
+                            success: true
+                        });
+                    } else {
+                        res.json({
+                            success: false
+                        });
+                    }
+                });
+        })
+        .catch((err) => {
+            console.log(err);
+            res.json({
+                success: false
+            });
+        });
+
 });
 
 app.post("/register", (req, res) => {
@@ -70,6 +108,13 @@ app.post("/register", (req, res) => {
                 });
         });
 });
+
+app.get("/logout", (req, res) => {
+    req.session = null;
+    res.redirect("/welcome");
+});
+
+
 
 
 
