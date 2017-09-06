@@ -7,7 +7,7 @@ const {middleware} = require("./express/middleware.js");
 
 
 //MIDDLEWARE
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + "/public"));
 
 if (process.env.NODE_ENV != 'production') {
     app.use(require('./build'));
@@ -17,13 +17,12 @@ middleware(app);
 
 
 //ROUTES
-
 app.get("/", (req, res) => {
     console.log("req.session", req.session);
     if(!req.session.user) {
         return res.redirect("/welcome");
     }
-    res.sendFile(__dirname + "/public/index.html");
+    res.sendFile(__dirname + "/index.html");
 });
 
 
@@ -32,16 +31,9 @@ app.get("/welcome", (req, res) => {
     if(req.session.user) {
         return res.redirect("/");
     }
-    res.sendFile(__dirname + "/public/index.html");
+    res.sendFile(__dirname + "/index.html");
 });
 
-app.get("/login", (req, res) => {
-    console.log("req.session.user", req.session.user);
-    if(req.session.user) {
-        return res.redirect("/");
-    }
-    res.sendFile(__dirname + "/public/index.html");
-});
 
 app.post("/login" , (req, res) => {
 
@@ -88,6 +80,7 @@ app.post("/register", (req, res) => {
     hashPassword(pw)
         .then((hash) => {
             let data = [first, last, email, hash];
+            console.log(data);
             addNewUser(data)
                 .then((result) => {
                     req.session.user = {

@@ -11,7 +11,7 @@ var router = (
             <Route path="/login" component={Login} />
             <IndexRoute component={Register} />
         </Route>
-    </Router>
+    </Router>    
 );
 
 var comp;

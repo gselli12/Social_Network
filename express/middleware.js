@@ -3,9 +3,10 @@ const compression = require('compression');
 const bodyParser = require('body-parser');
 
 var middleware = (app) => {
+    app.use(require("cookie-parser")());
+
     app.use(cookieSession({
-        name: "session",
-        keys: ['id', 'email']
+        secret: "secret"
     }));
 
     app.use(bodyParser.json());
