@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Router, Route, Link, IndexRoute, hashHistory } from 'react-router';
 import { Welcome, Register, Login } from './welcome';
 import axios from 'axios';
-import {Logo} from './logo';
+import {App} from './app';
 
 var router = (
     <Router history={hashHistory}>
@@ -11,14 +11,14 @@ var router = (
             <Route path="/login" component={Login} />
             <IndexRoute component={Register} />
         </Route>
-    </Router>    
+    </Router>
 );
 
 var comp;
 if(location.pathname == "/welcome") {
     comp = router;
 } else {
-    comp = <Logo />;
+    comp = <App />;
 }
 
 ReactDOM.render(

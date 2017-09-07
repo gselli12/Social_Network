@@ -9,7 +9,7 @@ if(process.env.DATABASE_URL) {
 }
 
 let addNewUser = (data) => {
-    return db.query("INSERT INTO users (first, last, email, pw) VALUES ($1, $2, $3, $4) RETURNING id, email;", data, (err, results) => {
+    return db.query("INSERT INTO users (first, last, email, pw) VALUES ($1, $2, $3, $4) RETURNING id, email, first, last, image, bio;", data, (err, results) => {
         if (err) {
             console.log(err);
         } else {
@@ -19,7 +19,7 @@ let addNewUser = (data) => {
 };
 
 let getHash = (email) => {
-    return db.query("SELECT pw, email, id FROM users WHERE email = ($1);", email, (err, results) => {
+    return db.query("SELECT pw, email, id, first, last, image, bio FROM users WHERE email = ($1);", email, (err, results) => {
         if(err) {
             console.log(err);
         } else {

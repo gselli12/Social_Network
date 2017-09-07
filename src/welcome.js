@@ -29,12 +29,10 @@ function wrapInAuthForm(Component, url) {
         }
         handleChange(e) {
             this[e.target.name] = e.target.value;
-            this.setState({
-                [e.target.name]: e.target.value
-            });
         }
         submit() {
-            let {firstName, lastName, email, pw} = this.state;
+            console.log(this);
+            let {firstName, lastName, email, pw} = this;
 
             axios.post( url, {
                 first: firstName,
@@ -44,7 +42,6 @@ function wrapInAuthForm(Component, url) {
             }).then(resp => {
 
                 const data = resp.data;
-                console.log("data", data);
 
                 if (!data.success) {
                     this.setState({
