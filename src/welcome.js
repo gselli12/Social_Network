@@ -39,7 +39,7 @@ function wrapInAuthForm(Component, url) {
                 last: lastName,
                 email: email,
                 pw: pw
-            }).then(resp => {
+            }).then((resp) => {
 
                 const data = resp.data;
 

@@ -14,5 +14,24 @@ body {
     height: 100px;
     width: 100px;
     right: 20px;
+    top: 20px;
     border-radius: 50px;
+}
+
+.shadow {
+    position: fixed;
+    left:0;
+    top:0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0,0,0, 0.7);
+}
+
+.uploadProfilePic {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    background-color: white;
+    top: 25%;
+    left: 25%;
 }

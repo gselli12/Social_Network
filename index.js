@@ -3,6 +3,30 @@ const app = express();
 const {hashPassword, checkPassword} = require("./Config/hashing.js");
 const {addNewUser, getHash} = require("./sql/dbqueries.js");
 const {middleware} = require("./express/middleware.js");
+const knox = require('knox');
+let secrets = require('./secrets.json');
+var multer = require('multer');
+var uidSafe = require('uid-safe');
+var path = require('path');
+const fs = require('fs');
+
+//AWS
+const client = knox.createClient({
+    key: secrets.AWS_KEY,
+    secret: secrets.AWS_SECRET,
+    bucket: 'mypracticesn'
+});
+
+var uploadToS3 = (reqfile) => {
+    return new Promise((resolve, reject) => {
+        const s3Request = client.put(reqfile.filename, {
+            'Content-Type': reqfile.mimetype,
+            'Content-Length': reqfile.size,
+            'x-amz-acl': 'public-read'
+        });
+        resolve(s3Request);
+    });
+};
 
 
 
@@ -12,6 +36,24 @@ app.use(express.static(__dirname + "/public"));
 if (process.env.NODE_ENV != 'production') {
     app.use(require('./build'));
 }
+
+var diskStorage = multer.diskStorage({
+    destination: function (req, file, callback) {
+        callback(null, __dirname + "/uploads");
+    },
+    filename: function(req, file, callback) {
+        uidSafe(24).then(function(uid) {
+            callback(null, uid + path.extname(file.originalname));
+        });
+    }
+});
+
+var uploader = multer({
+    storage: diskStorage,
+    limits: {
+        filesize: 2097152
+    }
+});
 
 middleware(app);
 
@@ -53,7 +95,6 @@ app.post("/register", (req, res) => {
                         image: result.rows[0].image,
                         bio: result.rows[0].bio
                     };
-                    console.log(req.session.user);
                 })
                 .then(() => {
                     res.json({
@@ -99,7 +140,6 @@ app.post("/login" , (req, res) => {
                         res.json({
                             success: true
                         });
-                        console.log(req.session.user);
                     } else {
                         res.json({
                             success: false
@@ -114,6 +154,27 @@ app.post("/login" , (req, res) => {
             });
         });
 
+});
+
+app.post("/upload", uploader.single('file'), (req, res) => {
+    if(req.file) {
+        uploadToS3(req.file)
+            .then((s3Request) => {
+                const readStream = fs.createReadStream(req.file.path);
+                readStream.pipe(s3Request);
+                s3Request.on("response", s3Response => {
+                    const wasSuccessful = s3Response.statusCode == 200;
+                    console.log("statuscode", s3Response.statusCode);
+                    res.json({
+                        success: wasSuccessful
+                    });
+                });
+            });
+    } else {
+        res.json({
+            success: false
+        });
+    }
 });
 
 app.get("/logout", (req, res) => {
