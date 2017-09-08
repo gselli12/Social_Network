@@ -14,14 +14,11 @@ export class App extends React.Component {
         this.showUploader = this.showUploader.bind(this);
     }
     showUploader() {
-        console.log(this);
         this.setState({
             uploaderIsVisible: true
         });
     }
     closeUploader() {
-        console.log("toggle");
-        console.log(this);
         this.setState({
             uploaderIsVisible: false
         });
@@ -34,7 +31,8 @@ export class App extends React.Component {
                     image: "https://mypracticesn.s3.amazonaws.com/"+data.data.image,
                     first: data.data.first,
                     last: data.data.last,
-                    id: data.data.id
+                    id: data.data.id,
+                    bio: data.data.bio
                 });
                 console.log(this.state.url);
             });
@@ -64,10 +62,16 @@ export class App extends React.Component {
         console.log("change", e.target.files[0]);
     }
     render() {
+        const children = React.cloneElement(this.props.children, {
+            image: this.state.image,
+            first: this.state.first,
+            last: this.state.last,
+            bio: this.state.bio
+        });
         return(
             <div>
                 <header><Logo /><ProfilePic showUploader = {this.showUploader} image = {this.state.image}/></header>
-                <p>This is your app page</p>
+                {children}
                 {this.state.uploaderIsVisible && <PicUploader uploadImage = {(e) => {this.uploadImage(e);}} handleChange = {(e) => this.handleChange(e)} closeUploader = {(e) => {this.closeUploader(e);}}/>}
             </div>
         );

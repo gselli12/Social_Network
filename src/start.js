@@ -4,24 +4,40 @@ import { Router, Route, Link, IndexRoute, hashHistory } from 'react-router';
 import { Welcome, Register, Login } from './welcome';
 import axios from 'axios';
 import {App} from './app';
+import {Profile} from "./profile";
 
-var router = (
-    <Router history={hashHistory}>
-        <Route path="/" component={Welcome}>
-            <Route path="/login" component={Login} />
-            <IndexRoute component={Register} />
-        </Route>
-    </Router>
-);
+// var router = (
+//     <Router history={hashHistory}>
+//         <Route path="/" component={Welcome}>
+//             <Route path="/login" component={Login} />
+//             <IndexRoute component={Register} />
+//         </Route>
+//     </Router>
+// );
 
-var comp;
+var router;
+
+
 if(location.pathname == "/welcome") {
-    comp = router;
+    router = (
+        <Router history={hashHistory}>
+            <Route path="/" component={Welcome}>
+                <Route path="/login" component={Login} />
+                <IndexRoute component={Register} />
+            </Route>
+        </Router>);
 } else {
-    comp = <App />;
+    router = (
+        <Router history={hashHistory}>
+            <Route path="/" component={App}>
+                <IndexRoute component={Profile} />
+            </Route>
+        </Router>
+    );
+    //comp = <App />;
 }
 
 ReactDOM.render(
-    comp,
+    router,
     document.querySelector('main')
 );

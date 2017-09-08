@@ -184,9 +184,10 @@ app.get("/user", (req, res) => {
         first: req.session.user.first,
         last: req.session.user.last,
         image: req.session.user.image,
+        bio: req.session.user.bio
     });
+    res.redirect("/");
 });
-
 
 app.get("/logout", (req, res) => {
     req.session = null;
@@ -194,7 +195,13 @@ app.get("/logout", (req, res) => {
 });
 
 
-
+//KEEP this at the bottom:
+app.get('*', function(req, res) {
+    if(!req.session.user) {
+        return res.redirect("/welcome");
+    }
+    res.sendFile(__dirname + '/index.html');
+});
 
 app.listen(8080, function() {
     console.log("Listening on port 8080");

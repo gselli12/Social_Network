@@ -11,11 +11,31 @@ body {
 
 .profilePic {
     position: absolute;
-    height: 200px;
-    width: 200px;
+    height: 150px;
+    width: 150px;
     right: 20px;
     top: 20px;
     border-radius: 100px;
+}
+
+.profile {
+    display: flex;
+    flex-direction: row;
+}
+
+#large-pic {
+    position: relative;
+    right: auto;
+    left: 20px;
+    height: 200px;
+    width: 200px;
+}
+
+.info-profile {
+    display: flex;
+    flex-direction: column;
+    margin-left: 40px;
+    padding-top: 30px;
 }
 
 .shadow {
