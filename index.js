@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const {hashPassword, checkPassword} = require("./Config/hashing.js");
-const {addNewUser, getHash} = require("./sql/dbqueries.js");
+const {updatePic, addNewUser, getHash} = require("./sql/dbqueries.js");
 const {middleware} = require("./express/middleware.js");
 const knox = require('knox');
 let secrets = require('./secrets.json');
@@ -28,15 +28,6 @@ var uploadToS3 = (reqfile) => {
     });
 };
 
-
-
-//MIDDLEWARE
-app.use(express.static(__dirname + "/public"));
-
-if (process.env.NODE_ENV != 'production') {
-    app.use(require('./build'));
-}
-
 var diskStorage = multer.diskStorage({
     destination: function (req, file, callback) {
         callback(null, __dirname + "/uploads");
@@ -54,6 +45,14 @@ var uploader = multer({
         filesize: 2097152
     }
 });
+
+
+//MIDDLEWARE
+app.use(express.static(__dirname + "/public"));
+
+if (process.env.NODE_ENV != 'production') {
+    app.use(require('./build'));
+}
 
 middleware(app);
 
@@ -84,7 +83,6 @@ app.post("/register", (req, res) => {
     hashPassword(pw)
         .then((hash) => {
             let data = [first, last, email, hash];
-            // console.log(data);
             addNewUser(data)
                 .then((result) => {
                     req.session.user = {
@@ -118,7 +116,6 @@ app.post("/login" , (req, res) => {
 
     getHash(email)
         .then((hash) => {
-            // console.log(hash.rows[0].pw);
             let id = hash.rows[0].id;
             let email = hash.rows[0].email;
             let first = hash.rows[0].first;
@@ -153,7 +150,6 @@ app.post("/login" , (req, res) => {
                 success: false
             });
         });
-
 });
 
 app.post("/upload", uploader.single('file'), (req, res) => {
@@ -169,6 +165,11 @@ app.post("/upload", uploader.single('file'), (req, res) => {
                         success: wasSuccessful
                     });
                 });
+            })
+            .then(() => {
+                let data = [req.file.filename, req.session.user.email];
+                req.session.user.image = req.file.filename;
+                updatePic(data);
             });
     } else {
         res.json({
@@ -177,11 +178,20 @@ app.post("/upload", uploader.single('file'), (req, res) => {
     }
 });
 
+app.get("/user", (req, res) => {
+    res.json({
+        id: req.session.user.id,
+        first: req.session.user.first,
+        last: req.session.user.last,
+        image: req.session.user.image,
+    });
+});
+
+
 app.get("/logout", (req, res) => {
     req.session = null;
     res.redirect("/welcome");
 });
-
 
 
 

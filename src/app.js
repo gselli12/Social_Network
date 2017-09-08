@@ -3,6 +3,7 @@ import axios from 'axios';
 import {Link} from 'react-router';
 import {Logo} from './logo';
 import {ProfilePic} from './profilepic';
+import {PicUploader} from "./picUploader";
 
 
 
@@ -13,20 +14,47 @@ export class App extends React.Component {
         this.showUploader = this.showUploader.bind(this);
     }
     showUploader() {
-
+        console.log(this);
         this.setState({
             uploaderIsVisible: true
         });
+    }
+    closeUploader() {
+        console.log("toggle");
+        console.log(this);
+        this.setState({
+            uploaderIsVisible: false
+        });
+    }
+    componentDidMount() {
+        axios.get("/user")
+            .then((data) => {
+                console.log(data);
+                this.setState({
+                    image: "https://mypracticesn.s3.amazonaws.com/"+data.data.image,
+                    first: data.data.first,
+                    last: data.data.last,
+                    id: data.data.id
+                });
+                console.log(this.state.url);
+            });
     }
     uploadImage() {
         var formData = new FormData();
 
         formData.append('file', this.state.file),
-        
+
         axios.post("/upload", formData)
             .then((resp) => {
-                console.log("successful request");
+                let data = resp.data;
                 console.log(resp.data);
+                if(!data.success) {
+                    this.setState({
+                        error: true
+                    });
+                } else {
+                    location.replace("/");
+                }
             });
     }
     handleChange(e) {
@@ -38,23 +66,10 @@ export class App extends React.Component {
     render() {
         return(
             <div>
-                <header><Logo /><ProfilePic showUploader = {this.showUploader} /></header>
+                <header><Logo /><ProfilePic showUploader = {this.showUploader} image = {this.state.image}/></header>
                 <p>This is your app page</p>
-                {this.state.uploaderIsVisible && <PicUploader uploadImage = {(e) => {this.uploadImage(e);}} handleChange = {(e) => this.handleChange(e)}/>}
+                {this.state.uploaderIsVisible && <PicUploader uploadImage = {(e) => {this.uploadImage(e);}} handleChange = {(e) => this.handleChange(e)} closeUploader = {(e) => {this.closeUploader(e);}}/>}
             </div>
         );
     }
-}
-
-export function PicUploader({handleChange, uploadImage}) {
-    return (
-        <div className="shadow">
-            <div className = "uploadProfilePic">
-                <input name="image" type="file" onChange = {handleChange}/>
-                <button onClick={
-                    uploadImage
-                } >Upload</button>
-            </div>
-        </div>
-    );
 }

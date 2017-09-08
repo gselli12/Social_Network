@@ -2,32 +2,14 @@ import React from 'react';
 import axios from 'axios';
 import {Link} from 'react-router';
 
-export function PicUploader() {
-
-    // handleChange(e) {
-    //     this[e.target.name] = e.target.value;
-    // }
-    // setImage() {
-    //     console.log("submitting this", this);
-    //     axios.post("/upload", {
-    //         image: this.image
-    //     })
-    //         .then((resp) => {
-    //             console.log(resp.data);
-    //         });
-    // }
-
+export function PicUploader({handleChange, uploadImage, closeUploader}) {
     return (
         <div className="shadow">
             <div className = "uploadProfilePic">
-                <input name="image" type="file"/>
-                <button onclick={() => {
-                    console.log("click");
-                    this.setImage;
-                }} >Upload</button>
+                <img src="close.png" onClick={closeUploader} className = "close-modal"/>
+                <input name="image" type="file" onChange = {handleChange}/>
+                <button onClick={uploadImage} >Upload</button>
             </div>
         </div>
     );
-
-
 }

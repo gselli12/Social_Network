@@ -28,5 +28,17 @@ let getHash = (email) => {
     });
 };
 
+var updatePic = (data) => {
+    return db.query("UPDATE users SET image = ($1) WHERE email = ($2);", data, (err, results) => {
+        if(err) {
+            console.log(err);
+        } else {
+            console.log(results);
+            return results;
+        }
+    });
+};
+
+module.exports.updatePic = updatePic;
 module.exports.getHash = getHash;
 module.exports.addNewUser = addNewUser;
