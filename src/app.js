@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import axios from './axios';
 import {Link} from 'react-router';
 import {Logo} from './logo';
 import {ProfilePic} from './profilepic';
@@ -12,6 +12,8 @@ export class App extends React.Component {
         super(props);
         this.state = {};
         this.showUploader = this.showUploader.bind(this);
+        this.showEditBio = this.showEditBio.bind(this);
+        this.readInput = this.readInput.bind(this);
     }
     showUploader() {
         this.setState({
@@ -23,18 +25,24 @@ export class App extends React.Component {
             uploaderIsVisible: false
         });
     }
+    showEditBio() {
+        this.setState({
+            editBioIsVisible: true
+        });
+    }
     componentDidMount() {
         axios.get("/user")
             .then((data) => {
                 console.log(data);
+                const {first, last, id, bio} = data.data;
                 this.setState({
                     image: "https://mypracticesn.s3.amazonaws.com/"+data.data.image,
-                    first: data.data.first,
-                    last: data.data.last,
-                    id: data.data.id,
-                    bio: data.data.bio
+                    first,
+                    last,
+                    id,
+                    bio
                 });
-                console.log(this.state.url);
+                console.log(this.state.image);
             });
     }
     uploadImage() {
@@ -59,14 +67,27 @@ export class App extends React.Component {
         this.setState({
             file: e.target.files[0]
         });
-        console.log("change", e.target.files[0]);
+
+    }
+    readInput(e) {
+        this.setState({
+            textareaBio : e.target.value
+        });
+        console.log("change", this.state.textareaBio);
     }
     render() {
+
+        const {id, image, first, last, bio, editBioIsVisible} = this.state;
+
         const children = React.cloneElement(this.props.children, {
-            image: this.state.image,
-            first: this.state.first,
-            last: this.state.last,
-            bio: this.state.bio
+            id,
+            image,
+            first,
+            last,
+            bio,
+            editBioIsVisible,
+            showEditBio: this.showEditBio,
+            readInput: this.readInput
         });
         return(
             <div>

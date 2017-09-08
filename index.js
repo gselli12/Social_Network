@@ -186,7 +186,6 @@ app.get("/user", (req, res) => {
         image: req.session.user.image,
         bio: req.session.user.bio
     });
-    res.redirect("/");
 });
 
 app.get("/logout", (req, res) => {

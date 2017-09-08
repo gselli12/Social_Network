@@ -1,6 +1,7 @@
 var cookieSession = require("cookie-session");
 const compression = require('compression');
 const bodyParser = require('body-parser');
+const csurf = require("csurf");
 
 var middleware = (app) => {
     app.use(require("cookie-parser")());
@@ -13,6 +14,12 @@ var middleware = (app) => {
 
     app.use(compression());
 
+    app.use(csurf());
+
+    app.use((req, res, next) => {
+        res.cookie("myHomemadeCookie", req.csrfToken());
+        next();
+    });
 
 
 };
