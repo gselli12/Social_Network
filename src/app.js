@@ -14,6 +14,7 @@ export class App extends React.Component {
         this.showUploader = this.showUploader.bind(this);
         this.showEditBio = this.showEditBio.bind(this);
         this.readInput = this.readInput.bind(this);
+        this.updateBio = this.updateBio.bind(this);
     }
     showUploader() {
         this.setState({
@@ -31,9 +32,8 @@ export class App extends React.Component {
         });
     }
     componentDidMount() {
-        axios.get("/user")
+        axios.get("/api/user")
             .then((data) => {
-                console.log(data);
                 const {first, last, id, bio} = data.data;
                 this.setState({
                     image: "https://mypracticesn.s3.amazonaws.com/"+data.data.image,
@@ -42,7 +42,6 @@ export class App extends React.Component {
                     id,
                     bio
                 });
-                console.log(this.state.image);
             });
     }
     uploadImage() {
@@ -63,6 +62,20 @@ export class App extends React.Component {
                 }
             });
     }
+    updateBio() {
+        let {textareaBio} = this.state;
+
+        axios.post("/bio", {
+            bio: textareaBio
+        });
+
+        this.setState({
+            bio: textareaBio,
+            editBioIsVisible: false
+        });
+        console.log(this);
+
+    }
     handleChange(e) {
         this.setState({
             file: e.target.files[0]
@@ -73,7 +86,6 @@ export class App extends React.Component {
         this.setState({
             textareaBio : e.target.value
         });
-        console.log("change", this.state.textareaBio);
     }
     render() {
 
@@ -87,8 +99,10 @@ export class App extends React.Component {
             bio,
             editBioIsVisible,
             showEditBio: this.showEditBio,
-            readInput: this.readInput
+            readInput: this.readInput,
+            updateBio: this.updateBio
         });
+
         return(
             <div>
                 <header><Logo /><ProfilePic showUploader = {this.showUploader} image = {this.state.image}/></header>

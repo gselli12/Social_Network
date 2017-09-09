@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const {hashPassword, checkPassword} = require("./Config/hashing.js");
-const {updatePic, addNewUser, getHash} = require("./sql/dbqueries.js");
+const {updatePic, addNewUser, getHash, updateBio} = require("./sql/dbqueries.js");
 const {middleware} = require("./express/middleware.js");
 const knox = require('knox');
 let secrets = require('./secrets.json');
@@ -178,7 +178,7 @@ app.post("/upload", uploader.single('file'), (req, res) => {
     }
 });
 
-app.get("/user", (req, res) => {
+app.get("/api/user", (req, res) => {
     res.json({
         id: req.session.user.id,
         first: req.session.user.first,
@@ -186,6 +186,15 @@ app.get("/user", (req, res) => {
         image: req.session.user.image,
         bio: req.session.user.bio
     });
+});
+
+app.post("/bio", (req, res) => {
+    let data = [req.body.bio, req.session.user.email];
+
+    updateBio(data)
+        .then((resp) => {
+            console.log(resp);
+        });
 });
 
 app.get("/logout", (req, res) => {
