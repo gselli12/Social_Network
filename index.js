@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const {hashPassword, checkPassword} = require("./Config/hashing.js");
-const {updatePic, addNewUser, getHash, updateBio} = require("./sql/dbqueries.js");
+const {updatePic, addNewUser, getHash, updateBio, getOtherUserData} = require("./sql/dbqueries.js");
 const {middleware} = require("./express/middleware.js");
 const knox = require('knox');
 let secrets = require('./secrets.json');
@@ -85,13 +85,14 @@ app.post("/register", (req, res) => {
             let data = [first, last, email, hash];
             addNewUser(data)
                 .then((result) => {
+                    const {id, email, image, bio} = result.rows[0];
                     req.session.user = {
-                        id: result.rows[0].id,
-                        email: result.rows[0].email,
-                        first: first,
-                        last: last,
-                        image: result.rows[0].image,
-                        bio: result.rows[0].bio
+                        id,
+                        email,
+                        first,
+                        last,
+                        image,
+                        bio
                     };
                 })
                 .then(() => {
@@ -116,23 +117,18 @@ app.post("/login" , (req, res) => {
 
     getHash(email)
         .then((hash) => {
-            let id = hash.rows[0].id;
-            let email = hash.rows[0].email;
-            let first = hash.rows[0].first;
-            let last = hash.rows[0].last;
-            let image = hash.rows[0].image;
-            let bio = hash.rows[0].bio;
+            const {id, email, first, last, image, bio} = hash.rows[0];
 
             checkPassword(pw, hash.rows[0].pw)
                 .then((result) => {
                     if(result) {
                         req.session.user = {
-                            id: id,
-                            email: email,
-                            first: first,
-                            last: last,
-                            image: image,
-                            bio: bio
+                            id,
+                            email,
+                            first,
+                            last,
+                            image,
+                            bio
                         };
                         res.json({
                             success: true
@@ -179,12 +175,13 @@ app.post("/upload", uploader.single('file'), (req, res) => {
 });
 
 app.get("/api/user", (req, res) => {
+    const {id, first, last, image, bio} = req.session.user;
     res.json({
-        id: req.session.user.id,
-        first: req.session.user.first,
-        last: req.session.user.last,
-        image: req.session.user.image,
-        bio: req.session.user.bio
+        id,
+        first,
+        last,
+        image,
+        bio
     });
 });
 
@@ -194,6 +191,21 @@ app.post("/bio", (req, res) => {
     updateBio(data)
         .then((resp) => {
             console.log(resp);
+        });
+});
+
+app.get("/api/user/:id", (req, res) => {
+    let id = [req.params.id];
+
+    getOtherUserData(id)
+        .then((results) => {
+            let {first, last, image, bio} = results.rows[0];
+            res.json({
+                first,
+                last,
+                image,
+                bio
+            });
         });
 });
 

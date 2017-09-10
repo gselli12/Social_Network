@@ -44,12 +44,22 @@ var updateBio = (data) => {
         if(err) {
             console.log(err);
         } else {
-            console.log(results);
             return results;
         }
     });
 };
 
+var getOtherUserData = (id) => {
+    return db.query("SELECT image, first, last, bio FROM users WHERE id = ($1);", id, (err, results) => {
+        if(err) {
+            console.log(err);
+        } else {
+            return results;
+        }
+    });
+};
+
+module.exports.getOtherUserData = getOtherUserData;
 module.exports.updateBio = updateBio;
 module.exports.updatePic = updatePic;
 module.exports.getHash = getHash;

@@ -1,32 +1,35 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, Link, IndexRoute, hashHistory, browserHistory } from 'react-router';
-import { Welcome, Register, Login } from './welcome';
+import { Welcome, Register, Login} from './welcome';
 //import axios from "./axios";
 import {App} from './app';
 import {Profile} from "./profile";
+import {OtherPersonsProfile} from "./otherpersonsprofile";
 
-var router;
+let welcomeRouter = (
+    <Router history={hashHistory}>
+        <Route path="/" component={Welcome}>
+            <Route path="/login" component={Login} />
+            <IndexRoute component={Register} />
+        </Route>
+    </Router>
+);
 
-if(location.pathname == "/welcome") {
-    router = (
-        <Router history={hashHistory}>
-            <Route path="/" component={Welcome}>
-                <Route path="/login" component={Login} />
-                <IndexRoute component={Register} />
-            </Route>
-        </Router>);
-} else {
-    router = (
-        <Router history={browserHistory}>
-            <Route path="/" component={App}>
-                <IndexRoute component={Profile} />
-            </Route>
-        </Router>
-    );
-}
+let loggedInRouter = (
+    <Router history={browserHistory}>
+        <Route path="/" component={App}>
+            <Route path="/user/:id" component={OtherPersonsProfile} />
+            <IndexRoute component={Profile} />
+        </Route>
+    </Router>
+);
+
+let routerToRender;
+location.pathname == "/welcome" ? routerToRender = welcomeRouter : routerToRender = loggedInRouter;
+
 
 ReactDOM.render(
-    router,
+    routerToRender,
     document.querySelector('main')
 );
