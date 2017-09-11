@@ -33,7 +33,6 @@ var updatePic = (data) => {
         if(err) {
             console.log(err);
         } else {
-            console.log(results);
             return results;
         }
     });
@@ -54,7 +53,6 @@ var getOtherUserData = (id) => {
         if(err) {
             console.log(err);
         } else {
-            console.log("getOtheruserData successful");
             return results;
         }
     });
@@ -65,7 +63,6 @@ var checkFriendshipStatus = (data) => {
         if(err) {
             console.log(err);
         } else {
-            console.log("checkFirendRequest successful");
             return results;
         }
     });
@@ -76,23 +73,20 @@ var newFriendRequest = (data) => {
         if(err) {
             console.log(err);
         } else {
-            console.log(results);
             return results;
         }
     });
 };
 
 var changeFriendshipStatus = (data) => {
-    return db.query("UPDATE friendships SET status = ($3), sender_id = ($1), recipient_id = ($2) WHERE sender_id = ($1) AND recipient_id = ($2) OR recipient_id = ($1) AND sender_id = ($2);", data, (err, results) => {
+    return db.query("UPDATE friendships SET sender_id = ($1), recipient_id = ($2), status = ($3) WHERE sender_id = ($1) AND recipient_id = ($2) OR recipient_id = ($1) AND sender_id = ($2);", data, (err, results) => {
         if(err) {
             console.log(err);
         } else {
-            console.log(results);
             return results;
         }
     });
 };
-
 
 module.exports.changeFriendshipStatus = changeFriendshipStatus;
 module.exports.checkFriendshipStatus = checkFriendshipStatus;

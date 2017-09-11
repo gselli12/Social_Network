@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 export function Bio({bio, editBioIsVisible, showEditBio, readInput, updateBio}) {
     return(
         <div>

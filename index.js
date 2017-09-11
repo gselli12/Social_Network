@@ -279,7 +279,16 @@ app.post("/user/:id/cancelfriendrequest", (req, res) => {
         .then((resp) => {
             console.log(resp);
         });
-})
+});
+
+app.post("/user/:id/rejectfriendrequest", (req, res) => {
+    let data = [req.session.user.id, req.params.id, "REJECTED"];
+    console.log("post");
+    changeFriendshipStatus(data)
+        .then((resp) => {
+            console.log(resp);
+        });
+});
 
 app.get("/logout", (req, res) => {
     req.session = null;

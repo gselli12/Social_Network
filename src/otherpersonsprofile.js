@@ -8,27 +8,33 @@ export class OtherPersonsProfile extends React.Component{
         super(props);
         this.state = {};
     }
-    componentWillReceiveProps() {
+
+    componentDidMount() {
         let id = this.props.params.id;
         axios.get("/api/user/"+id)
             .then((data) => {
                 const {first, last, image, bio, friendshipStatus, isSender} = data.data;
-                console.log("data",data.data);
+                // console.log("data",data.data);
+                // console.log("this", this);
+                this.friendshipStatus = friendshipStatus;
+                this.isSender = isSender;
                 this.setState({
                     first,
                     last,
                     bio,
-                    image: "https://mypracticesn.s3.amazonaws.com/" + image,
-                    friendshipStatus,
-                    isSender
+                    image: "https://mypracticesn.s3.amazonaws.com/" + image
                 });
+                console.log(this.state);
             });
     }
     render() {
-        let {first, last, image, bio, friendshipStatus, isSender} = this.state;
+        let {first, last, image, bio} = this.state;
+        let {friendshipStatus, isSender} = this;
         let id = this.props.params.id;
+        console.log(this.state.first);
         return(
             <div className = "profile">
+
                 <img
                     className = "profilePic"
                     id="large-pic" src = {image}
@@ -36,24 +42,20 @@ export class OtherPersonsProfile extends React.Component{
                 <div className="info-profile">
                     <p>{first} {last}</p>
                     <p>{bio}</p>
-                    <FriendButton
-                        id={id}
-                        friendshipStatus = {friendshipStatus}
-                        isSender = {isSender}
-                    />
+
+                    {this.state.first &&
+                        <FriendButton
+                            id={id}
+                            friendshipStatus = {friendshipStatus}
+                            isSender = {isSender}
+                        />
+                    }
+
                 </div>
+
             </div>
+
+
         );
     }
 }
-
-
-
-// export function OtherPersonsProfile(props) {
-//     return(
-//         <div>
-//             <p>{props.first}{props.last}</p>
-//             <p>{props.bio}</p>
-//         </div>
-//     )
-// }
