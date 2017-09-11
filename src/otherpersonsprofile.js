@@ -12,25 +12,35 @@ export class OtherPersonsProfile extends React.Component{
         let id = this.props.params.id;
         axios.get("/api/user/"+id)
             .then((data) => {
-                const {first, last, image, bio} = data.data;
+                const {first, last, image, bio, friendshipStatus, isSender} = data.data;
+                console.log("data",data.data);
                 this.setState({
                     first,
                     last,
                     bio,
-                    image: "https://mypracticesn.s3.amazonaws.com/" + image
+                    image: "https://mypracticesn.s3.amazonaws.com/" + image,
+                    friendshipStatus,
+                    isSender
                 });
             });
     }
     render() {
-        let {first, last, image, bio} = this.state;
+        let {first, last, image, bio, friendshipStatus, isSender} = this.state;
         let id = this.props.params.id;
         return(
             <div className = "profile">
-                <img className = "profilePic" id="large-pic" src = {image} />
+                <img
+                    className = "profilePic"
+                    id="large-pic" src = {image}
+                />
                 <div className="info-profile">
                     <p>{first} {last}</p>
                     <p>{bio}</p>
-                    <FriendButton id={id}/>
+                    <FriendButton
+                        id={id}
+                        friendshipStatus = {friendshipStatus}
+                        isSender = {isSender}
+                    />
                 </div>
             </div>
         );

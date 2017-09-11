@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const {hashPassword, checkPassword} = require("./Config/hashing.js");
-const {updatePic, addNewUser, getHash, updateBio, getOtherUserData, newFriendRequest, checkFriendshipStatus} = require("./sql/dbqueries.js");
+const {updatePic, addNewUser, getHash, updateBio, getOtherUserData, newFriendRequest, checkFriendshipStatus, changeFriendshipStatus} = require("./sql/dbqueries.js");
 const {middleware} = require("./express/middleware.js");
 const knox = require('knox');
 let secrets = require('./secrets.json');
@@ -198,23 +198,40 @@ app.post("/bio", (req, res) => {
 });
 
 app.get("/api/user/:id", (req, res) => {
-    let id = [req.params.id];
-    console.log("id", id);
-    let data = [id[0], req.session.user.id];
+    let id = req.params.id;
+    let data = [id, req.session.user.id];
 
-    Promise.all([getOtherUserData(id),
+    Promise.all([getOtherUserData([id]),
         checkFriendshipStatus(data)])
 
         .then((results) => {
-            console.log("results", results[0].rows[0]);
+            console.log("results", results[1].rows[0]);
             let {first, last, image, bio} = results[0].rows[0];
-            let {status} = results[1].rows[0];
+
+            let friendshipStatus;
+            let isSender;
+            if(!results[1].rows[0]) {
+                friendshipStatus = "NOT FRIENDS";
+            } else {
+                friendshipStatus = results[1].rows[0].status;
+                let sender = results[1].rows[0].sender_id;
+                if(sender == id){
+                    console.log("is not sender");
+                    isSender = false;
+                } else {
+                    console.log("is sender");
+                    isSender = true;
+                }
+
+            }
+
             res.json({
                 first,
                 last,
                 image,
                 bio,
-                status
+                friendshipStatus,
+                isSender
             });
         });
 });
@@ -227,6 +244,42 @@ app.post("/user/:id/sendfriendrequest", (req, res) => {
             console.log(resp);
         });
 });
+
+app.post("/user/:id/acceptfriendrequest", (req, res) => {
+    let data = [req.session.user.id, req.params.id, "FRIENDS"];
+    console.log(data);
+    changeFriendshipStatus(data)
+        .then((resp) => {
+            console.log(resp);
+        });
+});
+
+app.post("/user/:id/resendfriendrequest", (req, res) => {
+    let data = [req.session.user.id, req.params.id, "PENDING"];
+    console.log(data);
+    changeFriendshipStatus(data)
+        .then((resp) => {
+            console.log(resp);
+        });
+});
+
+app.post("/user/:id/unfriend", (req, res) => {
+    let data = [req.session.user.id, req.params.id, "DELETED"];
+    console.log(data);
+    changeFriendshipStatus(data)
+        .then((resp) => {
+            console.log(resp);
+        });
+});
+
+app.post("/user/:id/cancelfriendrequest", (req, res) => {
+    let data = [req.session.user.id, req.params.id, "CANCELED"];
+    console.log(data);
+    changeFriendshipStatus(data)
+        .then((resp) => {
+            console.log(resp);
+        });
+})
 
 app.get("/logout", (req, res) => {
     req.session = null;

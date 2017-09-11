@@ -118,7 +118,8 @@ export class App extends React.Component {
                         uploadImage = {(e) => {this.uploadImage(e);}}
                         handleChange = {(e) => this.handleChange(e)}
                         closeUploader = {(e) => {this.closeUploader(e);}}
-                    />}
+                    />
+                }
             </div>
         );
     }

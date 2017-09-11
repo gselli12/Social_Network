@@ -61,7 +61,7 @@ var getOtherUserData = (id) => {
 };
 
 var checkFriendshipStatus = (data) => {
-    return db.query("SELECT status FROM friendships WHERE sender_id = ($1) AND recipient_id = ($2) OR recipient_id = ($1) AND sender_id = ($2)", data, (err, results) => {
+    return db.query("SELECT status, sender_id FROM friendships WHERE sender_id = ($1) AND recipient_id = ($2) OR recipient_id = ($1) AND sender_id = ($2)", data, (err, results) => {
         if(err) {
             console.log(err);
         } else {
@@ -82,6 +82,19 @@ var newFriendRequest = (data) => {
     });
 };
 
+var changeFriendshipStatus = (data) => {
+    return db.query("UPDATE friendships SET status = ($3), sender_id = ($1), recipient_id = ($2) WHERE sender_id = ($1) AND recipient_id = ($2) OR recipient_id = ($1) AND sender_id = ($2);", data, (err, results) => {
+        if(err) {
+            console.log(err);
+        } else {
+            console.log(results);
+            return results;
+        }
+    });
+};
+
+
+module.exports.changeFriendshipStatus = changeFriendshipStatus;
 module.exports.checkFriendshipStatus = checkFriendshipStatus;
 module.exports.newFriendRequest = newFriendRequest;
 module.exports.getOtherUserData = getOtherUserData;
