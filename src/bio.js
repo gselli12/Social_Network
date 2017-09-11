@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+
 
 export function Bio({bio, editBioIsVisible, showEditBio, readInput, updateBio}) {
     return(

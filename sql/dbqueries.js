@@ -54,11 +54,36 @@ var getOtherUserData = (id) => {
         if(err) {
             console.log(err);
         } else {
+            console.log("getOtheruserData successful");
             return results;
         }
     });
 };
 
+var checkFriendshipStatus = (data) => {
+    return db.query("SELECT status FROM friendships WHERE sender_id = ($1) AND recipient_id = ($2) OR recipient_id = ($1) AND sender_id = ($2)", data, (err, results) => {
+        if(err) {
+            console.log(err);
+        } else {
+            console.log("checkFirendRequest successful");
+            return results;
+        }
+    });
+};
+
+var newFriendRequest = (data) => {
+    return db.query("INSERT INTO friendships (sender_id, recipient_id, status) VALUES ($1, $2, $3);", data, (err, results) => {
+        if(err) {
+            console.log(err);
+        } else {
+            console.log(results);
+            return results;
+        }
+    });
+};
+
+module.exports.checkFriendshipStatus = checkFriendshipStatus;
+module.exports.newFriendRequest = newFriendRequest;
 module.exports.getOtherUserData = getOtherUserData;
 module.exports.updateBio = updateBio;
 module.exports.updatePic = updatePic;

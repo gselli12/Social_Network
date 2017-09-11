@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const {hashPassword, checkPassword} = require("./Config/hashing.js");
-const {updatePic, addNewUser, getHash, updateBio, getOtherUserData} = require("./sql/dbqueries.js");
+const {updatePic, addNewUser, getHash, updateBio, getOtherUserData, newFriendRequest, checkFriendshipStatus} = require("./sql/dbqueries.js");
 const {middleware} = require("./express/middleware.js");
 const knox = require('knox');
 let secrets = require('./secrets.json');
@@ -51,7 +51,10 @@ var uploader = multer({
 app.use(express.static(__dirname + "/public"));
 
 if (process.env.NODE_ENV != 'production') {
-    app.use(require('./build'));
+    // app.use(require('./build'));
+    app.use("/bundle.js", require("http-proxy-middleware")({
+        target: 'http://localhost:8081/'
+    }));
 }
 
 middleware(app);
@@ -196,16 +199,32 @@ app.post("/bio", (req, res) => {
 
 app.get("/api/user/:id", (req, res) => {
     let id = [req.params.id];
+    console.log("id", id);
+    let data = [id[0], req.session.user.id];
 
-    getOtherUserData(id)
+    Promise.all([getOtherUserData(id),
+        checkFriendshipStatus(data)])
+
         .then((results) => {
-            let {first, last, image, bio} = results.rows[0];
+            console.log("results", results[0].rows[0]);
+            let {first, last, image, bio} = results[0].rows[0];
+            let {status} = results[1].rows[0];
             res.json({
                 first,
                 last,
                 image,
-                bio
+                bio,
+                status
             });
+        });
+});
+
+app.post("/user/:id/sendfriendrequest", (req, res) => {
+    let data = [req.session.user.id, req.params.id, "PENDING"];
+    console.log(data);
+    newFriendRequest(data)
+        .then((resp) => {
+            console.log(resp);
         });
 });
 

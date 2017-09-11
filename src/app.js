@@ -86,25 +86,9 @@ export class App extends React.Component {
             textareaBio : e.target.value
         });
     }
-    // getOtherPersonsProfile() {
-    //     console.log("getting data");
-    //     let id = this.props.params.id;
-    //     axios.get("/test/user/" + id)
-    //         .then((data) => {
-    //             console.log(data);
-    //             const {first, last, image, bio} = data.data;
-    //             this.setState({
-    //                 first,
-    //                 last,
-    //                 image,
-    //                 bio
-    //             });
-    //         });
-    // }
     render() {
 
         const {id, image, first, last, bio, editBioIsVisible} = this.state;
-        console.log(this.props);
         const children = React.cloneElement(this.props.children, {
             id,
             image,
@@ -120,9 +104,21 @@ export class App extends React.Component {
 
         return(
             <div>
-                <header><Logo /><ProfilePic showUploader = {this.showUploader} image = {this.state.image}/></header>
+                <header><Logo />
+                    <ProfilePic
+                        showUploader = {this.showUploader}
+                        image = {this.state.image}
+                    />
+                </header>
+
                 {children}
-                {this.state.uploaderIsVisible && <PicUploader uploadImage = {(e) => {this.uploadImage(e);}} handleChange = {(e) => this.handleChange(e)} closeUploader = {(e) => {this.closeUploader(e);}}/>}
+
+                {this.state.uploaderIsVisible &&
+                    <PicUploader
+                        uploadImage = {(e) => {this.uploadImage(e);}}
+                        handleChange = {(e) => this.handleChange(e)}
+                        closeUploader = {(e) => {this.closeUploader(e);}}
+                    />}
             </div>
         );
     }
