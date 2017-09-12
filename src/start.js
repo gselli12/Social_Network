@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, Link, IndexRoute, hashHistory, browserHistory } from 'react-router';
 import { Welcome, Register, Login} from './welcome';
-//import axios from "./axios";
 import {App} from './app';
 import {Profile} from "./profile";
 import {OtherPersonsProfile} from "./otherpersonsprofile";

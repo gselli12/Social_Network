@@ -1,6 +1,5 @@
 import React from 'react';
 import axios from './axios';
-import {Link} from 'react-router';
 import {Logo} from './logo';
 import {ProfilePic} from './profilepic';
 import {PicUploader} from "./picUploader";
@@ -90,17 +89,18 @@ export class App extends React.Component {
 
         const {id, image, first, last, bio, editBioIsVisible} = this.state;
         const children = React.cloneElement(this.props.children, {
-            id,
-            image,
-            first,
-            last,
-            bio,
-            editBioIsVisible,
-            showEditBio: this.showEditBio,
-            readInput: this.readInput,
-            updateBio: this.updateBio
+            profile : {
+                id,
+                image,
+                first,
+                last,
+                bio,
+                editBioIsVisible,
+                showEditBio: this.showEditBio,
+                readInput: this.readInput,
+                updateBio: this.updateBio
+            }
         });
-
 
         return(
             <div>

@@ -62,7 +62,6 @@ export class FriendButton extends React.Component {
                 {(friendshipStatus == "DELETED" || friendshipStatus == "CANCELED" || friendshipStatus == "REJECTED") &&
                     <button onClick = {this.resendFriendRequest}>Send Friendrequest</button>
                 }
-
                 {friendshipStatus == "PENDING" && !isSender &&
                     <div>
                         <button onClick = {this.acceptFriendRequest}>Accept request</button>

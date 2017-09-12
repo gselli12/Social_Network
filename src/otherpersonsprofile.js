@@ -1,6 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-import {Link} from 'react-router';
 import {FriendButton} from './friendbutton';
 
 export class OtherPersonsProfile extends React.Component{
@@ -8,14 +7,11 @@ export class OtherPersonsProfile extends React.Component{
         super(props);
         this.state = {};
     }
-
-    componentDidMount() {
+    getData() {
         let id = this.props.params.id;
         axios.get("/api/user/"+id)
             .then((data) => {
                 const {first, last, image, bio, friendshipStatus, isSender} = data.data;
-                // console.log("data",data.data);
-                // console.log("this", this);
                 this.friendshipStatus = friendshipStatus;
                 this.isSender = isSender;
                 this.setState({
@@ -26,6 +22,13 @@ export class OtherPersonsProfile extends React.Component{
                 });
                 console.log(this.state);
             });
+    }
+
+    componentDidMount() {
+        this.getData();
+    }
+    componentWillReceiveProps() {
+        this.getData();
     }
     render() {
         let {first, last, image, bio} = this.state;
