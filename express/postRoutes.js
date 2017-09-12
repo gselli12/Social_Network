@@ -91,7 +91,6 @@ var postRoutes = (app) => {
                     readStream.pipe(s3Request);
                     s3Request.on("response", s3Response => {
                         const wasSuccessful = s3Response.statusCode == 200;
-                        console.log("statuscode", s3Response.statusCode);
                         res.json({
                             success: wasSuccessful
                         });
@@ -115,65 +114,46 @@ var postRoutes = (app) => {
         let data = [req.body.bio, req.session.user.email];
 
         updateBio(data)
-            .then((resp) => {
-                console.log(resp);
+            .catch((err) => {
+                console.log(err);
+                res.json({
+                    success: false
+                });
             });
     });
 
 
+    app.post("/user/:id/:friendshipbutton", (req, res) => {
+        var request = req.params.friendshipbutton;
 
-    app.post("/user/:id/sendfriendrequest", (req, res) => {
-        let data = [req.session.user.id, req.params.id, "PENDING"];
-        console.log(data);
-        newFriendRequest(data)
-            .then((resp) => {
-                console.log(resp);
-            });
-    });
+        if(request == "sendfriendrequest") {
+            let data = [req.session.user.id, req.params.id, "PENDING"];
+            newFriendRequest(data);
+        } else {
+            var status;
+            if (request == "acceptfriendrequest") {
+                status = "FRIENDS";
+            } else if (request == "resendfriendrequest") {
+                status = "PENDING";
+            } else if(request == "unfriend") {
+                status = "DELETED";
+            } else if(request == "cancelfriendrequest") {
+                status = "CANCELED";
+            } else if(request == "rejectfriendrequest") {
+                status = "REJECTED";
+            } else {
+                console.log("you mistyped your post request");
+            }
 
-    app.post("/user/:id/acceptfriendrequest", (req, res) => {
-        let data = [req.session.user.id, req.params.id, "FRIENDS"];
-        console.log(data);
-        changeFriendshipStatus(data)
-            .then((resp) => {
-                console.log(resp);
-            });
-    });
-
-    app.post("/user/:id/resendfriendrequest", (req, res) => {
-        let data = [req.session.user.id, req.params.id, "PENDING"];
-        console.log(data);
-        changeFriendshipStatus(data)
-            .then((resp) => {
-                console.log(resp);
-            });
-    });
-
-    app.post("/user/:id/unfriend", (req, res) => {
-        let data = [req.session.user.id, req.params.id, "DELETED"];
-        console.log(data);
-        changeFriendshipStatus(data)
-            .then((resp) => {
-                console.log(resp);
-            });
-    });
-
-    app.post("/user/:id/cancelfriendrequest", (req, res) => {
-        let data = [req.session.user.id, req.params.id, "CANCELED"];
-        console.log(data);
-        changeFriendshipStatus(data)
-            .then((resp) => {
-                console.log(resp);
-            });
-    });
-
-    app.post("/user/:id/rejectfriendrequest", (req, res) => {
-        let data = [req.session.user.id, req.params.id, "REJECTED"];
-        console.log("post");
-        changeFriendshipStatus(data)
-            .then((resp) => {
-                console.log(resp);
-            });
+            let data = [req.session.user.id, req.params.id, status];
+            changeFriendshipStatus(data)
+                .catch((err) => {
+                    console.log(err);
+                    res.json({
+                        success: false
+                    });
+                });
+        }
     });
 
 };
