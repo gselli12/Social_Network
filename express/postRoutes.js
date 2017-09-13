@@ -10,10 +10,7 @@ const fs = require('fs');
 var postRoutes = (app) => {
 
     app.post("/register", (req, res) => {
-        let first = req.body.first;
-        let last = req.body.last;
-        let email = req.body.email;
-        let pw = req.body.pw;
+        const {first, last, email, pw} = req.body;
 
         hashPassword(pw)
             .then((hash) => {
@@ -47,10 +44,11 @@ var postRoutes = (app) => {
 
     app.post("/login" , (req, res) => {
 
-        let email = [req.body.email];
-        let pw = req.body.pw;
 
-        getHash(email)
+
+        let {email, pw} = req.body;
+
+        getHash([email])
             .then((hash) => {
                 const {id, email, first, last, image, bio} = hash.rows[0];
 

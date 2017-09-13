@@ -86,7 +86,6 @@ export class App extends React.Component {
         });
     }
     render() {
-
         const {id, image, first, last, bio, editBioIsVisible} = this.state;
         const children = React.cloneElement(this.props.children, {
             profile : {

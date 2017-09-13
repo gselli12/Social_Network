@@ -1,4 +1,4 @@
-const {getOtherUserData, checkFriendshipStatus} = require("../sql/dbqueries.js");
+const {getOtherUserData, checkFriendshipStatus, getFriends} = require("../sql/dbqueries.js");
 
 
 var apiGETRoutes = (app) => {
@@ -22,7 +22,6 @@ var apiGETRoutes = (app) => {
             checkFriendshipStatus(data)])
 
             .then((results) => {
-                console.log("results", results[1].rows[0]);
                 let {first, last, image, bio} = results[0].rows[0];
 
                 let friendshipStatus;
@@ -33,13 +32,10 @@ var apiGETRoutes = (app) => {
                     friendshipStatus = results[1].rows[0].status;
                     let sender = results[1].rows[0].sender_id;
                     if(sender == id){
-                        console.log("is not sender");
                         isSender = false;
                     } else {
-                        console.log("is sender");
                         isSender = true;
                     }
-
                 }
 
                 res.json({
@@ -52,6 +48,26 @@ var apiGETRoutes = (app) => {
                 });
             });
     });
+
+    app.get("/api/friends", (req, res) => {
+        let id = req.session.user.id;
+        getFriends([id])
+            .then((results) => {
+                let friends = [];
+                results.rows.forEach((friend, id) => {
+                    friends[id] = {};
+                    friends[id].id = friend.id;
+                    friends[id].first = friend.first;
+                    friends[id].last = friend.last;
+                    friends[id].image = "https://mypracticesn.s3.amazonaws.com/"+friend.image;
+                    friends[id].status = friend.status;
+                });
+                res.json({
+                    friends
+                });
+            });
+    });
+
 };
 
 module.exports.apiGETRoutes = apiGETRoutes;

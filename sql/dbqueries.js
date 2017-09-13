@@ -88,6 +88,19 @@ var changeFriendshipStatus = (data) => {
     });
 };
 
+let getFriends = (id) => {
+    return db.query("SELECT users.first, users.last, users.id, users.image, friendships.status FROM users JOIN friendships ON users.id = friendships.sender_id OR users.id = friendships.recipient_id  WHERE (friendships.sender_id = ($1) AND friendships.status = 'FRIENDS' AND NOT users.id = ($1)) OR (friendships.recipient_id = ($1) AND friendships.status = 'FRIENDS' AND NOT users.id = ($1));", id, (err, results) => {
+        if(err) {
+            console.log(err);
+        } else {
+            return results;
+        }
+    });
+};
+
+
+
+module.exports.getFriends = getFriends;
 module.exports.changeFriendshipStatus = changeFriendshipStatus;
 module.exports.checkFriendshipStatus = checkFriendshipStatus;
 module.exports.newFriendRequest = newFriendRequest;
