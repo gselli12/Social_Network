@@ -8,22 +8,42 @@ class Friends extends React.Component {
         this.props.dispatch(getFriends());
     }
     render() {
-        const {friends} = this.props;
+        const {friends, pendings} = this.props;
         console.log("friends", friends);
         if(!friends) {
             return null;
         }
         let myFriends =
             friends.map((friend) => {
-                return (<div><p>{friend.first} {friend.last}</p>
-                    <img src = {friend.image} alt=""/></div>);
+                return (
+                    <div className = "friend-single">
+                        <p>{friend.first} {friend.last}</p>
+                        <img src = {friend.image} alt="" className="profilePic large-pic"/>
+                    </div>
+                );
             });
-        console.log(friends[0])
-        console.log(myFriends);
+        let myPendings =
+            pendings.map((pending) => {
+                return (
+
+                    <div className ="pending-single">
+                        <p>{pending.first} {pending.last}</p>
+                        <img src = {pending.image} className="profilePic large-pic" alt=""/>
+                    </div>
+                );
+            });
 
         return(
             <div>
-                {myFriends}
+                <h3>Pending Friend Requests</h3>
+                <div className="pending">
+                    {myPendings}
+                </div>
+
+                <h3>These are your friends</h3>
+                <div className = "friends">
+                    {myFriends}
+                </div>
             </div>
         );
     }
@@ -32,7 +52,8 @@ class Friends extends React.Component {
 const mapStateToProps = function(state) {
     console.log("mapStateToProps");
     return {
-        friends: state.friends
+        friends: state.friends && state.friends.filter(friend => friend.status == "FRIENDS"),
+        pendings: state.friends && state.friends.filter(friend => friend.status == "PENDING")
     };
 };
 

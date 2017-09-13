@@ -23,7 +23,7 @@ body {
     flex-direction: row;
 }
 
-#large-pic {
+.large-pic {
     position: relative;
     right: auto;
     left: 20px;
@@ -62,4 +62,22 @@ body {
     position: absolute;
     top: 20px;
     right: 20px;
+}
+
+.pending {
+    display: flex;
+    flex-direction: row;
+}
+
+.friends {
+    display: flex;
+    flex-direction: row;
+}
+
+.friend-single {
+    margin: 20px;
+}
+
+.pending-single {
+    margin: 20px;
 }
