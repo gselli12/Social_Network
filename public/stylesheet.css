@@ -2,6 +2,10 @@ body {
     background-color: yellow;
 }
 
+button {
+    margin-top: 30px;
+}
+
 .logo {
     position: relative;
     height: 200px;
@@ -76,8 +80,14 @@ body {
 
 .friend-single {
     margin: 20px;
+    text-align: center;
 }
 
 .pending-single {
     margin: 20px;
+    text-align: center;
+}
+
+.button-list {
+    margin-top: 200px;
 }

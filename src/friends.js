@@ -1,34 +1,56 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import{getFriends} from './actions.js';
+import{getFriends, acceptRequest, unfriend, rejectRequest} from './actions.js';
 
 
 class Friends extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {};
+        this.acceptFriendRequest = this.acceptFriendRequest.bind(this);
+        this.unfriend = this.unfriend.bind(this);
+        this.rejectFriendRequest = this.rejectFriendRequest.bind(this);
+    }
     componentDidMount() {
         this.props.dispatch(getFriends());
     }
+    acceptFriendRequest(id) {
+        this.props.dispatch(acceptRequest(id));
+    }
+    rejectFriendRequest(id) {
+        this.props.dispatch(rejectRequest(id));
+    }
+    unfriend(id) {
+        console.log("click");
+        console.log(id);
+        this.props.dispatch(unfriend(id));
+    }
     render() {
         const {friends, pendings} = this.props;
-        console.log("friends", friends);
+        console.log("this.state", this.state);
         if(!friends) {
             return null;
         }
         let myFriends =
             friends.map((friend) => {
+                let {id, first, last, image} = friend;
                 return (
                     <div className = "friend-single">
-                        <p>{friend.first} {friend.last}</p>
-                        <img src = {friend.image} alt="" className="profilePic large-pic"/>
+                        <p>{first} {last}</p>
+                        <img src = {image} alt="" className="profilePic large-pic"/>
+                        <button onClick={() => this.unfriend(id)}>unfriend</button>
                     </div>
                 );
             });
         let myPendings =
             pendings.map((pending) => {
+                const {id, first, last, image} = pending;
                 return (
-
                     <div className ="pending-single">
-                        <p>{pending.first} {pending.last}</p>
-                        <img src = {pending.image} className="profilePic large-pic" alt=""/>
+                        <p>{first} {last}</p>
+                        <img src = {image} className="profilePic large-pic" alt=""/>
+                        <button onClick={() => this.acceptFriendRequest(id)}>accept</button>
+                        <button onClick = {() => this.rejectFriendRequest(id)}>reject</button>
                     </div>
                 );
             });
@@ -53,15 +75,8 @@ const mapStateToProps = function(state) {
     console.log("mapStateToProps");
     return {
         friends: state.friends && state.friends.filter(friend => friend.status == "FRIENDS"),
-        pendings: state.friends && state.friends.filter(friend => friend.status == "PENDING")
+        pendings: state.friends && state.friends.filter(friend => friend.status == "PENDING"),
     };
 };
-
-// const mapDispatchToProps = function(dispatch) {
-//     console.log("mapDispatchToProps");
-//     return {
-//         getFriends: () => dispatch(getFriends())
-//     };
-// };
 
 export default connect(mapStateToProps)(Friends);

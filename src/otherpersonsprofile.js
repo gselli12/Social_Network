@@ -39,8 +39,8 @@ export class OtherPersonsProfile extends React.Component{
             <div className = "profile">
 
                 <img
-                    className = "profilePic"
-                    id="large-pic" src = {image}
+                    className = "profilePic large-pic"
+                    src = {image}
                 />
                 <div className="info-profile">
                     <p>{first} {last}</p>

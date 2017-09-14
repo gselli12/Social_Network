@@ -144,13 +144,12 @@ var postRoutes = (app) => {
             }
 
             let data = [req.session.user.id, req.params.id, status];
-            changeFriendshipStatus(data)
-                .catch((err) => {
-                    console.log(err);
-                    res.json({
-                        success: false
-                    });
-                });
+
+            changeFriendshipStatus(data);
+
+            res.json({
+                success: true
+            });
         }
     });
 
