@@ -20,7 +20,6 @@ export class OtherPersonsProfile extends React.Component{
                     bio,
                     image: "https://mypracticesn.s3.amazonaws.com/" + image
                 });
-                console.log(this.state);
             });
     }
 
@@ -34,7 +33,6 @@ export class OtherPersonsProfile extends React.Component{
         let {first, last, image, bio} = this.state;
         let {friendshipStatus, isSender} = this;
         let id = this.props.params.id;
-        console.log(this.state.first);
         return(
             <div className = "profile">
 

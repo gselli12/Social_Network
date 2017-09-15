@@ -4,16 +4,17 @@ import {Bio} from "./bio";
 
 
 export function Profile(props) {
+    const {image, first, last, bio, editBioIsVisible, updateBio, showEditBio, readInput} = props.profile;
     return (
         <div className ="profile">
-            <div className = "large-pic"><ProfilePic image = {props.profile.image} /></div>
+            <div className = "large-pic"><ProfilePic image = {image} /></div>
             <div className="info-profile">
-                <p>{props.profile.first} {props.profile.last}</p>
-                <Bio bio = {props.profile.bio}
-                    editBioIsVisible = {props.profile.editBioIsVisible}
-                    updateBio = {props.profile.updateBio}
-                    showEditBio = {props.profile.showEditBio}
-                    readInput = {props.profile.readInput}
+                <p>{first} {last}</p>
+                <Bio bio = {bio}
+                    editBioIsVisible = {editBioIsVisible}
+                    updateBio = {updateBio}
+                    showEditBio = {showEditBio}
+                    readInput = {readInput}
                 />
             </div>
         </div>

@@ -51,7 +51,6 @@ export class App extends React.Component {
         axios.post("/upload", formData)
             .then((resp) => {
                 let data = resp.data;
-                console.log(resp.data);
                 if(!data.success) {
                     this.setState({
                         error: true

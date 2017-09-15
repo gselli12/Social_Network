@@ -21,13 +21,10 @@ class Friends extends React.Component {
         this.props.dispatch(rejectRequest(id));
     }
     unfriend(id) {
-        console.log("click");
-        console.log(id);
         this.props.dispatch(unfriend(id));
     }
     render() {
         const {friends, pendings} = this.props;
-        console.log("this.state", this.state);
         if(!friends) {
             return null;
         }
@@ -72,7 +69,6 @@ class Friends extends React.Component {
 }
 
 const mapStateToProps = function(state) {
-    console.log("mapStateToProps");
     return {
         friends: state.friends && state.friends.filter(friend => friend.status == "FRIENDS"),
         pendings: state.friends && state.friends.filter(friend => friend.status == "PENDING"),

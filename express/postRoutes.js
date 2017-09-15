@@ -1,13 +1,13 @@
 
 const {hashPassword, checkPassword} = require("../Config/hashing.js");
-const {updatePic, addNewUser, getHash, updateBio, newFriendRequest, changeFriendshipStatus} = require("../sql/dbqueries.js");
+const {updatePic, addNewUser, getHash, updateBio, newFriendRequest, changeFriendshipStatus, getUsersByIds} = require("../sql/dbqueries.js");
 const {uploadToS3, uploader} = require("../express/middleware.js");
 
 const fs = require('fs');
 
 
 //ROUTES
-var postRoutes = (app) => {
+var postRoutes = (app, io) => {
 
     app.post("/register", (req, res) => {
         const {first, last, email, pw} = req.body;
@@ -112,6 +112,10 @@ var postRoutes = (app) => {
         let data = [req.body.bio, req.session.user.email];
 
         updateBio(data)
+            .then(() => {
+                req.session.user.bio = req.body.bio;
+                console.log(req.session.user.bio);
+            })
             .catch((err) => {
                 console.log(err);
                 res.json({
@@ -126,7 +130,13 @@ var postRoutes = (app) => {
 
         if(request == "sendfriendrequest") {
             let data = [req.session.user.id, req.params.id, "PENDING"];
-            newFriendRequest(data);
+            newFriendRequest(data)
+                .catch((err) => {
+                    console.log(err);
+                    res.json({
+                        success: false
+                    });
+                });
         } else {
             var status;
             if (request == "acceptfriendrequest") {
@@ -145,13 +155,53 @@ var postRoutes = (app) => {
 
             let data = [req.session.user.id, req.params.id, status];
 
-            changeFriendshipStatus(data);
-
-            res.json({
-                success: true
-            });
+            changeFriendshipStatus(data)
+                .then(() => {
+                    res.json({
+                        success: true
+                    });
+                })
+                .catch((err) => {
+                    console.log(err);
+                    res.json({
+                        success: false
+                    });
+                });
         }
     });
+
+    let onlineUsers = [];
+    app.get("/connected/:socketId", (req, res) => {
+        let socketId = req.params.socketId;
+        let userId = req.session.user.id;
+        const socketAlreadyThere = onlineUsers.some(user => user.socketId == socketId);
+        const userAlreadyThere = onlineUsers.some(user => user.userId == userId);
+
+        if(!socketAlreadyThere && io.sockets.sockets[socketId]) {
+            onlineUsers.push({
+                socketId,
+                userId
+            });
+
+            let ids = onlineUsers.map(user => user.userId);
+            getUsersByIds(ids)
+                .then((users) => {
+                    io.sockets.sockets[socketId].emit("onlineUsers", users.rows);
+                    console.log("emit onlineUsers");
+                });
+            !userAlreadyThere && io.sockets.emit("userJoined");
+        }
+        console.log("onlineUsers", onlineUsers);
+        res.json({
+            success: true
+        });
+    });
+
+    app.post("/disconnect/:socketId", (req, res) => {
+        let socketId = req.params.socketId;
+        let userId = req.session.user.id;
+        console.log("disconnect");
+    })
 
 };
 

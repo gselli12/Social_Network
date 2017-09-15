@@ -12,8 +12,7 @@ export function getFriends() {
 
 export function acceptRequest(id) {
     return axios.post("/user/" + id + "/acceptfriendrequest")
-        .then(({data}) => {
-            console.log(data);
+        .then(() => {
             return {
                 type: 'ACCEPT_REQUEST',
                 id
@@ -23,8 +22,7 @@ export function acceptRequest(id) {
 
 export function unfriend(id) {
     return axios.post("/user/" + id + "/unfriend")
-        .then(({data}) => {
-            console.log(data);
+        .then(() => {
             return {
                 type: "UNFRIEND",
                 id
@@ -34,11 +32,27 @@ export function unfriend(id) {
 
 export function rejectRequest(id) {
     return axios.post("/user/" + id + "/rejectfriendrequest")
-        .then(({data}) => {
-            console.log(data);
+        .then(() => {
             return {
                 type: 'REJECT_REQUEST',
                 id
             };
         });
+}
+
+export function onlineUser(id) {
+    return axios.get("/connected/" + id)
+        .then(() => {
+            return {
+                type: 'USER_ONLINE'
+            };
+        });
+}
+
+export function onlineUsers(users) {
+    console.log("action users", users)
+    return {
+        type: 'USERS_ONLINE',
+        users
+    };
 }

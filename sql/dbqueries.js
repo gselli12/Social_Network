@@ -79,28 +79,46 @@ var newFriendRequest = (data) => {
 };
 
 var changeFriendshipStatus = (data) => {
-    return db.query("UPDATE friendships SET sender_id = ($1), recipient_id = ($2), status = ($3) WHERE sender_id = ($1) AND recipient_id = ($2) OR recipient_id = ($1) AND sender_id = ($2);", data, (err, results) => {
-        if(err) {
-            console.log(err);
-        } else {
-            return results;
-        }
-    });
+    return db.query(`UPDATE friendships SET sender_id = ($1), recipient_id = ($2), status = ($3)
+                    WHERE sender_id = ($1) AND recipient_id = ($2)
+                    OR recipient_id = ($1) AND sender_id = ($2);`, data, (err, results) => {
+            if(err) {
+                console.log(err);
+            } else {
+                return results;
+            }
+        });
 };
 
 let getFriends = (id) => {
-    return db.query("SELECT users.id, first, last, image, status FROM friendships JOIN users ON (status = 'PENDING' AND recipient_id = $1 AND sender_id = users.id) OR (status = 'FRIENDS' AND recipient_id = $1 AND sender_id = users.id) OR (status = 'FRIENDS' AND sender_id = $1 AND recipient_id = users.id)", id, (err, results) => {
-        if(err) {
-            console.log(err);
-        } else {
-            console.log(results);
-            return results;
-        }
-    });
+    return db.query(`SELECT users.id, first, last, image, status
+                    FROM friendships
+                    JOIN users
+                    ON (status = 'PENDING' AND recipient_id = $1 AND sender_id = users.id)
+                    OR (status = 'FRIENDS' AND recipient_id = $1 AND sender_id = users.id)
+                    OR (status = 'FRIENDS' AND sender_id = $1 AND recipient_id = users.id);`, id, (err, results) => {
+            if(err) {
+                console.log(err);
+            } else {
+                return results;
+            }
+        });
+};
+
+let getUsersByIds = (ids) => {
+    return db.query(`SELECT first, last, image, id
+                    FROM users
+                    WHERE id = ANY($1);`, [ids], (err, results) => {
+            if(err) {
+                console.log(err);
+            } else {
+                return results;
+            }
+        });
 };
 
 
-
+module.exports.getUsersByIds = getUsersByIds;
 module.exports.getFriends = getFriends;
 module.exports.changeFriendshipStatus = changeFriendshipStatus;
 module.exports.checkFriendshipStatus = checkFriendshipStatus;

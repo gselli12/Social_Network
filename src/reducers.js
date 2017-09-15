@@ -5,7 +5,6 @@ export default function(state = {}, action) {
         });
     }
     if(action.type == "UNFRIEND") {
-        console.log(action.type);
         state = Object.assign({}, state, {
             friends: state.friends.map((friend) => {
                 if(friend.id == action.id) {
@@ -17,10 +16,8 @@ export default function(state = {}, action) {
                 return friend;
             })
         });
-        console.log(state);
     }
     if(action.type == "ACCEPT_REQUEST") {
-        console.log(action.type);
         state = Object.assign({}, state, {
             friends: state.friends.map((friend) => {
                 if(friend.id == action.id) {
@@ -33,7 +30,6 @@ export default function(state = {}, action) {
         });
     }
     if(action.type == "REJECT_REQUEST") {
-        console.log(action.type);
         state = Object.assign({}, state, {
             friends: state.friends.map((friend) => {
                 if(friend.id == action.id) {
@@ -44,6 +40,13 @@ export default function(state = {}, action) {
                 return friend;
             })
         });
+    }
+    if(action.type == 'USERS_ONLINE') {
+        console.log("reducer users", action.users)
+        state = Object.assign({}, state, {
+            users: action.users
+        });
+        console.log("state", state);
     }
     return state;
 }

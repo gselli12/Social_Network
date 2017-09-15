@@ -5,10 +5,10 @@ import {Link} from 'react-router';
 export function Welcome(props) {
     return (
         <div>
-            <h2>Welcome to</h2>
-            <img src="logo.png"/>
-            <h3>We are rebelling becasue all the other online communities are revolting.</h3>
-            <h4>Join the rebellion!</h4>
+            <h2>Welcome to Poknetwork - the social network for Pokemon!</h2>
+            <img className = "logo" src="logo.png"/>
+            <h3>We are the first comprehensive social network for Pokemon - We're gonna catch them all!</h3>
+            <h4>Pokemons: should join us today!</h4>
             {props.children}
         </div>
     );

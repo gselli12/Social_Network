@@ -1,5 +1,13 @@
+@font-face {
+    font-family: Pokemon;
+        src: url('./Pokemon.ttf');
+}
+
+
 body {
     background-color: yellow;
+    text-align: center;
+    font-family: Pokemon;
 }
 
 button {
@@ -71,11 +79,13 @@ button {
 .pending {
     display: flex;
     flex-direction: row;
+    justify-content: center;
 }
 
 .friends {
     display: flex;
     flex-direction: row;
+    justify-content: center;
 }
 
 .friend-single {
