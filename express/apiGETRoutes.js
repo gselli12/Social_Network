@@ -1,4 +1,4 @@
-const {getOtherUserData, checkFriendshipStatus, getFriends, getUsersByIds} = require("../sql/dbqueries.js");
+const {getOtherUserData, checkFriendshipStatus, getFriends, getUsersByIds, getInitialChat} = require("../sql/dbqueries.js");
 
 
 var apiGETRoutes = (app, io) => {
@@ -77,6 +77,15 @@ var apiGETRoutes = (app, io) => {
         const socketAlreadyThere = onlineUsers.some(user => user.socketId == socketId);
         const userAlreadyThere = onlineUsers.some(user => user.userId == userId);
 
+
+        getInitialChat()
+            .then(results => {
+                io.sockets.emit("chatMessages", results.rows);
+                console.log("chatMessage emit", results.rows);
+            });
+
+
+
         if(!socketAlreadyThere && io.sockets.sockets[socketId]) {
             onlineUsers.push({
                 socketId,
@@ -101,6 +110,17 @@ var apiGETRoutes = (app, io) => {
             success: true
         });
     });
+
+
+    // app.get("/api/chat", (req, res) => {
+    //     getInitialComments()
+    //         .then(results => {
+    //             console.log(results.rows);
+    //
+    //             io.sockets.emit("chatMessage", results.rows);
+    //             console.log("chatMessage emit")
+    //         });
+    // });
 
     io.on("connection", (socket) => {
 

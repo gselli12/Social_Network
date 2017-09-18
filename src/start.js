@@ -7,6 +7,7 @@ import {Profile} from "./profile";
 import {OtherPersonsProfile} from "./otherpersonsprofile";
 import Friends from "./friends";
 import Online from "./online";
+import Chat from "./chat.js";
 
 //REDUX
 import { createStore, applyMiddleware } from 'redux';
@@ -32,6 +33,7 @@ let loggedInRouter = (
     <Provider store={store}>
         <Router history={browserHistory}>
             <Route path="/" component={App}>
+                <Route path="/chat" component={Chat} />
                 <Route path="/online" component={Online}/>
                 <Route path="/me" component = {Profile} />
                 <Route path="/user/:id" component={OtherPersonsProfile} />

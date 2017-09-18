@@ -69,3 +69,10 @@ export function userLeft(user) {
         user
     };
 }
+
+export function getInitialComments(chat) {
+    return {
+        type: "RECEIVED_CHAT",
+        chat
+    };
+}

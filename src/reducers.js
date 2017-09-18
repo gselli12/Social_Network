@@ -63,5 +63,10 @@ export default function(state = {}, action) {
             })
         });
     }
+    if(action.type == "RECEIVED_CHAT") {
+        state = Object.assign({}, state, {
+            chat: action.chat
+        });
+    }
     return state;
 }

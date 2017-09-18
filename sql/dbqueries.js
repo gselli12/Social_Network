@@ -117,7 +117,20 @@ let getUsersByIds = (ids) => {
         });
 };
 
+let getInitialChat = () => {
+    return db.query(`SELECT users.id, first, last, image, comment, chat.timestamp
+                    FROM users
+                    JOIN chat
+                    ON user_id = users.id;`, null, (err, results) => {
+            if(err) {
+                console.log(err);
+            } else {
+                return results;
+            }
+        });
+};
 
+module.exports.getInitialChat = getInitialChat,
 module.exports.getUsersByIds = getUsersByIds;
 module.exports.getFriends = getFriends;
 module.exports.changeFriendshipStatus = changeFriendshipStatus;
