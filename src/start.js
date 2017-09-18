@@ -17,7 +17,6 @@ import {Provider} from 'react-redux';
 
 const store = createStore(reducer, composeWithDevTools(applyMiddleware(reduxPromise)));
 
-store.subscribe(() => console.log(store.getState()));
 
 
 let welcomeRouter = (

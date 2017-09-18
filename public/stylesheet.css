@@ -101,3 +101,18 @@ button {
 .button-list {
     margin-top: 200px;
 }
+
+.online-user {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.name-online {
+    margin-left: 50px;
+    margin-top: 30px;
+    max-width: 200px;
+    position: relative;
+}

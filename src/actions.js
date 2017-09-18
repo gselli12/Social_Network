@@ -50,9 +50,22 @@ export function onlineUser(id) {
 }
 
 export function onlineUsers(users) {
-    console.log("action users", users)
     return {
         type: 'USERS_ONLINE',
         users
+    };
+}
+
+export function userJoined(user) {
+    return {
+        type: 'USER_JOINED',
+        user
+    };
+}
+
+export function userLeft(user) {
+    return {
+        type: "USER_LEFT",
+        user
     };
 }

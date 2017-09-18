@@ -114,7 +114,6 @@ var postRoutes = (app, io) => {
         updateBio(data)
             .then(() => {
                 req.session.user.bio = req.body.bio;
-                console.log(req.session.user.bio);
             })
             .catch((err) => {
                 console.log(err);
@@ -184,24 +183,43 @@ var postRoutes = (app, io) => {
             });
 
             let ids = onlineUsers.map(user => user.userId);
+
             getUsersByIds(ids)
                 .then((users) => {
                     io.sockets.sockets[socketId].emit("onlineUsers", users.rows);
                     console.log("emit onlineUsers");
                 });
-            !userAlreadyThere && io.sockets.emit("userJoined");
+            let {id, first, last, image} = req.session.user;
+
+            !userAlreadyThere && io.sockets.emit("userJoined", {
+                id, first, last, image
+            });
+
         }
         console.log("onlineUsers", onlineUsers);
+
         res.json({
             success: true
         });
     });
 
-    app.post("/disconnect/:socketId", (req, res) => {
-        let socketId = req.params.socketId;
-        let userId = req.session.user.id;
-        console.log("disconnect");
-    })
+    io.on("connection", (socket) => {
+
+        socket.on("disconnect", () => {
+            var index = onlineUsers.findIndex(user => user.socketId === socket.id);
+            var userId;
+            if (index > -1) {
+                userId = onlineUsers[index].userId;
+                onlineUsers.splice(index, 1);
+            }
+            if (index > -1 && !onlineUsers.some(user => {return user.userId == userId;})) {
+                socket.broadcast.emit("userLeft", {
+                    userLeft: userId
+                });
+            }
+        });
+    });
+
 
 };
 

@@ -42,11 +42,26 @@ export default function(state = {}, action) {
         });
     }
     if(action.type == 'USERS_ONLINE') {
-        console.log("reducer users", action.users)
         state = Object.assign({}, state, {
             users: action.users
         });
-        console.log("state", state);
+    }
+    if(action.type == 'USER_JOINED') {
+        if(state.users && !state.users.find(user => user.id == action.user.id)) {
+            state = Object.assign({}, state, {
+                users: state.users ? [...state.users, action.user] : [action.user]
+            });
+        }
+    }
+    if(action.type == "USER_LEFT") {
+        state = Object.assign({}, state, {
+            users: state.users.filter(user => {
+                if(user.id == action.user.userLeft) {
+                    return null;
+                }
+                return user;
+            })
+        });
     }
     return state;
 }
