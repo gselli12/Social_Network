@@ -1,11 +1,26 @@
 import * as io from 'socket.io-client';
-const socket = io.connect();
-import {onlineUser} from "./actions";
+
+import {onlineUser, onlineUsers, userJoined, userLeft} from "./actions";
+
+import {store} from "./start";
 
 export function getSocket() {
-    if(!socket) {
+    const socket = io.connect();
+    socket.on("connect", () => {
+        store.dispatch((onlineUser(socket.id)));
 
-    }
-    console.log(socket);
+        socket.on("onlineUsers", (users) => {
+            if(users != undefined) {
+                store.dispatch(onlineUsers(users));
+            }
+        });
+        socket.on("userJoined", (user) => {
+            store.dispatch(userJoined(user));
+        });
+        socket.on("userLeft", (user) => {
+            store.dispatch(userLeft(user));
+        });
+    });
+
     return socket;
 }

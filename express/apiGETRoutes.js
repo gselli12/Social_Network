@@ -1,7 +1,7 @@
-const {getOtherUserData, checkFriendshipStatus, getFriends} = require("../sql/dbqueries.js");
+const {getOtherUserData, checkFriendshipStatus, getFriends, getUsersByIds} = require("../sql/dbqueries.js");
 
 
-var apiGETRoutes = (app) => {
+var apiGETRoutes = (app, io) => {
 
     app.get("/api/user", (req, res) => {
         const {id, first, last, image, bio} = req.session.user;
@@ -67,6 +67,58 @@ var apiGETRoutes = (app) => {
                 });
             });
     });
+
+
+    //SOCKET IO STUFF
+    let onlineUsers = [];
+    app.get("/connected/:socketId", (req, res) => {
+        let socketId = req.params.socketId;
+        let userId = req.session.user.id;
+        const socketAlreadyThere = onlineUsers.some(user => user.socketId == socketId);
+        const userAlreadyThere = onlineUsers.some(user => user.userId == userId);
+
+        if(!socketAlreadyThere && io.sockets.sockets[socketId]) {
+            onlineUsers.push({
+                socketId,
+                userId
+            });
+
+            let ids = onlineUsers.map(user => user.userId);
+
+            getUsersByIds(ids)
+                .then((users) => {
+                    io.sockets.sockets[socketId].emit("onlineUsers", users.rows);
+                });
+            let {id, first, last, image} = req.session.user;
+
+            !userAlreadyThere && io.sockets.emit("userJoined", {
+                id, first, last, image
+            });
+
+        }
+
+        res.json({
+            success: true
+        });
+    });
+
+    io.on("connection", (socket) => {
+
+        socket.on("disconnect", () => {
+            var index = onlineUsers.findIndex(user => user.socketId === socket.id);
+            var userId;
+            if (index > -1) {
+                userId = onlineUsers[index].userId;
+                onlineUsers.splice(index, 1);
+            }
+            if (index > -1 && !onlineUsers.some(user => {return user.userId == userId;})) {
+                socket.broadcast.emit("userLeft", {
+                    userLeft: userId
+                });
+            }
+        });
+    });
+
 
 };
 

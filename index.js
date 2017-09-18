@@ -42,9 +42,9 @@ app.get("/logout", (req, res) => {
     res.redirect("/welcome");
 });
 
-apiGETRoutes(app);
+apiGETRoutes(app, io);
 
-postRoutes(app, io);
+postRoutes(app);
 
 
 //KEEP this at the bottom:

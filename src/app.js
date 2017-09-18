@@ -3,6 +3,7 @@ import axios from './axios';
 import {Logo} from './logo';
 import {ProfilePic} from './profilepic';
 import {PicUploader} from "./picUploader";
+import {getSocket} from "./socket";
 
 
 
@@ -85,6 +86,7 @@ export class App extends React.Component {
         });
     }
     render() {
+        getSocket();
         const {id, image, first, last, bio, editBioIsVisible} = this.state;
         const children = React.cloneElement(this.props.children, {
             profile : {

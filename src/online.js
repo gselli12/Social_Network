@@ -1,32 +1,7 @@
 import React from "react";
 import { connect } from 'react-redux';
-//import {getSocket} from "./socket";
-import * as io from 'socket.io-client';
-const socket = io.connect();
-import {onlineUser, onlineUsers, userJoined, userLeft} from "./actions";
 
 class Online extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
-    componentDidMount() {
-        socket.on("connect", () => {
-            this.props.dispatch((onlineUser(socket.id)));
-
-            socket.on("onlineUsers", (users) => {
-                if(users != undefined) {
-                    this.props.dispatch(onlineUsers(users));
-                }
-            });
-            socket.on("userJoined", (user) => {
-                this.props.dispatch(userJoined(user));
-            });
-            socket.on("userLeft", (user) => {
-                this.props.dispatch(userLeft(user));
-            });
-        });
-    }
     render() {
         if(!this.props) {
             return null;
@@ -36,7 +11,6 @@ class Online extends React.Component {
 
         var onlineUsers;
         if(users) {
-
             onlineUsers= Object.keys(users).map((user, i) => {
                 let {first, last, image} = users[user];
                 return (

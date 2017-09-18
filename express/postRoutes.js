@@ -1,13 +1,13 @@
 
 const {hashPassword, checkPassword} = require("../Config/hashing.js");
-const {updatePic, addNewUser, getHash, updateBio, newFriendRequest, changeFriendshipStatus, getUsersByIds} = require("../sql/dbqueries.js");
+const {updatePic, addNewUser, getHash, updateBio, newFriendRequest, changeFriendshipStatus} = require("../sql/dbqueries.js");
 const {uploadToS3, uploader} = require("../express/middleware.js");
 
 const fs = require('fs');
 
 
 //ROUTES
-var postRoutes = (app, io) => {
+var postRoutes = (app) => {
 
     app.post("/register", (req, res) => {
         const {first, last, email, pw} = req.body;
@@ -168,58 +168,6 @@ var postRoutes = (app, io) => {
                 });
         }
     });
-
-    let onlineUsers = [];
-    app.get("/connected/:socketId", (req, res) => {
-        let socketId = req.params.socketId;
-        let userId = req.session.user.id;
-        const socketAlreadyThere = onlineUsers.some(user => user.socketId == socketId);
-        const userAlreadyThere = onlineUsers.some(user => user.userId == userId);
-
-        if(!socketAlreadyThere && io.sockets.sockets[socketId]) {
-            onlineUsers.push({
-                socketId,
-                userId
-            });
-
-            let ids = onlineUsers.map(user => user.userId);
-
-            getUsersByIds(ids)
-                .then((users) => {
-                    io.sockets.sockets[socketId].emit("onlineUsers", users.rows);
-                    console.log("emit onlineUsers");
-                });
-            let {id, first, last, image} = req.session.user;
-
-            !userAlreadyThere && io.sockets.emit("userJoined", {
-                id, first, last, image
-            });
-
-        }
-        console.log("onlineUsers", onlineUsers);
-
-        res.json({
-            success: true
-        });
-    });
-
-    io.on("connection", (socket) => {
-
-        socket.on("disconnect", () => {
-            var index = onlineUsers.findIndex(user => user.socketId === socket.id);
-            var userId;
-            if (index > -1) {
-                userId = onlineUsers[index].userId;
-                onlineUsers.splice(index, 1);
-            }
-            if (index > -1 && !onlineUsers.some(user => {return user.userId == userId;})) {
-                socket.broadcast.emit("userLeft", {
-                    userLeft: userId
-                });
-            }
-        });
-    });
-
 
 };
 
