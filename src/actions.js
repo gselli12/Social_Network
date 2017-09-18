@@ -76,3 +76,17 @@ export function getInitialComments(chat) {
         chat
     };
 }
+
+export function readComment(comment) {
+    return {
+        type: "WRITING_COMMENT",
+        comment
+    };
+}
+
+export function newComment(comment) {
+    return {
+        type: "NEW_COMMENT",
+        comment
+    };
+}

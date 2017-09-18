@@ -14,6 +14,10 @@ button {
     margin-top: 30px;
 }
 
+textarea {
+    margin-top: 30px;
+}
+
 .logo {
     position: relative;
     height: 200px;

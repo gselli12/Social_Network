@@ -1,10 +1,10 @@
-const {getOtherUserData, checkFriendshipStatus, getFriends, getUsersByIds, getInitialChat} = require("../sql/dbqueries.js");
+const {getOtherUserData, checkFriendshipStatus, getFriends, getUsersByIds, getInitialChat, addComment} = require("../sql/dbqueries.js");
 
 
 var apiGETRoutes = (app, io) => {
 
     app.get("/api/user", (req, res) => {
-        const {id, first, last, image, bio} = req.session.user;
+        const {id, first, last, bio, image} = req.session.user;
         res.json({
             id,
             first,
@@ -59,7 +59,7 @@ var apiGETRoutes = (app, io) => {
                     friends[id].id = friend.id;
                     friends[id].first = friend.first;
                     friends[id].last = friend.last;
-                    friends[id].image = "https://mypracticesn.s3.amazonaws.com/"+friend.image;
+                    friends[id].image = friend.image;
                     friends[id].status = friend.status;
                 });
                 res.json({
@@ -81,10 +81,8 @@ var apiGETRoutes = (app, io) => {
         getInitialChat()
             .then(results => {
                 io.sockets.emit("chatMessages", results.rows);
-                console.log("chatMessage emit", results.rows);
+                console.log("chatMessages emit", results.rows);
             });
-
-
 
         if(!socketAlreadyThere && io.sockets.sockets[socketId]) {
             onlineUsers.push({
@@ -98,7 +96,10 @@ var apiGETRoutes = (app, io) => {
                 .then((users) => {
                     io.sockets.sockets[socketId].emit("onlineUsers", users.rows);
                 });
-            let {id, first, last, image} = req.session.user;
+            let {id, first, last} = req.session.user;
+
+            let image =  req.session.user.image;
+            console.log("image");
 
             !userAlreadyThere && io.sockets.emit("userJoined", {
                 id, first, last, image
@@ -112,17 +113,19 @@ var apiGETRoutes = (app, io) => {
     });
 
 
-    // app.get("/api/chat", (req, res) => {
-    //     getInitialComments()
-    //         .then(results => {
-    //             console.log(results.rows);
-    //
-    //             io.sockets.emit("chatMessage", results.rows);
-    //             console.log("chatMessage emit")
-    //         });
-    // });
-
     io.on("connection", (socket) => {
+
+        socket.on("addComment", (data) => {
+            const {id, image, first, last, comment} = data;
+            addComment([id, comment])
+                .then(() => {
+                    console.log("comment aded", image);
+
+                    socket.emit("chatMessage", {
+                        first, last, comment, image
+                    });
+                });
+        });
 
         socket.on("disconnect", () => {
             var index = onlineUsers.findIndex(user => user.socketId === socket.id);

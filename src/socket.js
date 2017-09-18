@@ -1,16 +1,15 @@
 import * as io from 'socket.io-client';
 
-import {onlineUser, onlineUsers, userJoined, userLeft, getInitialComments} from "./actions";
+import {onlineUser, onlineUsers, userJoined, userLeft, getInitialComments, newComment} from "./actions";
 
 import {store} from "./start";
 
+export const socket = io.connect();
+
 export function getSocket() {
-    const socket = io.connect();
+
     socket.on("connect", () => {
         store.dispatch((onlineUser(socket.id)));
-
-
-
 
         socket.on("onlineUsers", (users) => {
             if(users != undefined) {
@@ -26,6 +25,12 @@ export function getSocket() {
 
         socket.on("chatMessages", (chat) => {
             store.dispatch(getInitialComments(chat));
+        });
+
+        socket.on("chatMessage", (data) => {
+            if(data != undefined) {
+                store.dispatch(newComment(data));
+            }
         });
     });
 

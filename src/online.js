@@ -15,7 +15,7 @@ class Online extends React.Component {
             onlineUsers= Object.keys(users).map((user, i) => {
                 let {first, last, image} = users[user];
                 return (
-                    <div className = "online-user"><img className ="profilePic large-pic" src ={"https://mypracticesn.s3.amazonaws.com/" + image} /><div className ="name-online">{first} {last}</div></div>
+                    <div className = "online-user"><img className ="profilePic large-pic" src ={image} /><div className ="name-online">{first} {last}</div></div>
                 );
             });
         }

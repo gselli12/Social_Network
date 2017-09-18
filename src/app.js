@@ -34,9 +34,9 @@ export class App extends React.Component {
     componentDidMount() {
         axios.get("/api/user")
             .then((data) => {
-                const {first, last, id, bio} = data.data;
+                const {first, last, id, bio, image} = data.data;
                 this.setState({
-                    image: "https://mypracticesn.s3.amazonaws.com/"+data.data.image,
+                    image,
                     first,
                     last,
                     id,

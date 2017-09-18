@@ -1,6 +1,6 @@
 
 const {hashPassword, checkPassword} = require("../Config/hashing.js");
-const {updatePic, addNewUser, getHash, updateBio, newFriendRequest, changeFriendshipStatus} = require("../sql/dbqueries.js");
+const {updatePic, addNewUser, getHash, updateBio, newFriendRequest, changeFriendshipStatus, addComment} = require("../sql/dbqueries.js");
 const {uploadToS3, uploader} = require("../express/middleware.js");
 
 const fs = require('fs');
@@ -95,8 +95,9 @@ var postRoutes = (app) => {
                     });
                 })
                 .then(() => {
-                    let data = [req.file.filename, req.session.user.email];
-                    req.session.user.image = req.file.filename;
+                    let image = "https://mypracticesn.s3.amazonaws.com/" + req.file.filename
+                    let data = [image, req.session.user.email];
+                    req.session.user.image = image;
                     updatePic(data);
                 });
         } else {
@@ -168,6 +169,7 @@ var postRoutes = (app) => {
                 });
         }
     });
+
 
 };
 

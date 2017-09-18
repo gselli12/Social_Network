@@ -18,7 +18,7 @@ export class OtherPersonsProfile extends React.Component{
                     first,
                     last,
                     bio,
-                    image: "https://mypracticesn.s3.amazonaws.com/" + image
+                    image: image
                 });
             });
     }

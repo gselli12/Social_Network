@@ -68,5 +68,17 @@ export default function(state = {}, action) {
             chat: action.chat
         });
     }
+    if(action.type == "WRITING_COMMENT") {
+        state = Object.assign({}, state, {
+            comment: action.comment
+        });
+    }
+    if(action.type == "NEW_COMMENT") {
+        console.log("state.chat", state.chat);
+        console.log("action.comment", action.comment);
+        state = Object.assign({}, state, {
+            chat: state.chat ? [...state.chat, action.comment] : [action.comment]
+        });
+    }
     return state;
 }

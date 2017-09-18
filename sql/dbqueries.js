@@ -130,6 +130,17 @@ let getInitialChat = () => {
         });
 };
 
+let addComment = (data) => {
+    return db.query(`INSERT INTO chat (user_id, comment) VALUES ($1, $2) RETURNING timestamp;`, data, (err, results) => {
+        if(err) {
+            console.log(err);
+        } else {
+            return results;
+        }
+    });
+};
+
+module.exports.addComment = addComment;
 module.exports.getInitialChat = getInitialChat,
 module.exports.getUsersByIds = getUsersByIds;
 module.exports.getFriends = getFriends;
