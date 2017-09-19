@@ -28,7 +28,7 @@ export function getSocket() {
         });
 
         socket.on("chatMessage", (data) => {
-            if(data != undefined) {
+            if(data) {
                 store.dispatch(newComment(data));
             }
         });

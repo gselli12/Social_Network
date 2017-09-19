@@ -31,7 +31,6 @@ function wrapInAuthForm(Component, url) {
             this[e.target.name] = e.target.value;
         }
         submit() {
-            console.log(this);
             let {firstName, lastName, email, pw} = this;
 
             axios.post( url, {

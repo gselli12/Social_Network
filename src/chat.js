@@ -9,32 +9,41 @@ class Chat extends React.Component {
         super(props);
         this.state = {};
         this.handleChange = this.handleChange.bind(this);
+        this.submitComment = this.submitComment.bind(this);
     }
     handleChange(e) {
         this.props.dispatch(readComment(e.target.value));
+    }
+    submitComment(e) {
         if (e.keyCode == 13) {
             const {first, last, id, image} = this.props.profile;
             const {comment} = this.props;
+            e.target.value = "";
             socket.emit("addComment", {
                 first, last, id, image, comment
             });
         }
+    }
+    componentDidUpdate() {
+        this.chatDiv.scrollTop = this.chatDiv.scrollHeight;
     }
     render() {
         const chat = this.props.chat;
         var chatToDisplay;
         if(chat) {
             chatToDisplay = chat.map((com) => {
-                let {first, last, comment, image} = com;
-                return <div className = "comment"><img className ="profilePic large-pic" src={image}/>{first}: {comment}</div>;
+                let {first, last, comment, image, timestamp} = com;
+                return <div className = "comment"><img className ="profilePic large-pic" src={image}/>{first}: {comment} at {timestamp}</div>;
             });
         }
 
         return(
             <div>
-                This is where the chat will go.
-                <div className ="comments">{chatToDisplay}</div>
-                <textarea rows="4" cols="40" onKeyDown= {e => this.handleChange(e)}></textarea>
+                <h3>Chat</h3>
+                <div className ="chat" ref={chatDiv => this.chatDiv = chatDiv}>
+                    <div className ="comments">{chatToDisplay}</div>
+                </div>
+                <textarea rows="5" cols="60" onKeyDown= {this.submitComment} onChange= {this.handleChange}></textarea>
             </div>
         );
 

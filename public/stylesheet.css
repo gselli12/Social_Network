@@ -120,3 +120,11 @@ textarea {
     max-width: 200px;
     position: relative;
 }
+
+.chat {
+    margin-left: 10%;
+    width: 80%;
+    height: 600px;
+    overflow-y: scroll;
+    background-color: white;
+}

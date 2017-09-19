@@ -81,7 +81,6 @@ var apiGETRoutes = (app, io) => {
         getInitialChat()
             .then(results => {
                 io.sockets.emit("chatMessages", results.rows);
-                console.log("chatMessages emit", results.rows);
             });
 
         if(!socketAlreadyThere && io.sockets.sockets[socketId]) {
@@ -99,7 +98,6 @@ var apiGETRoutes = (app, io) => {
             let {id, first, last} = req.session.user;
 
             let image =  req.session.user.image;
-            console.log("image");
 
             !userAlreadyThere && io.sockets.emit("userJoined", {
                 id, first, last, image
@@ -118,11 +116,10 @@ var apiGETRoutes = (app, io) => {
         socket.on("addComment", (data) => {
             const {id, image, first, last, comment} = data;
             addComment([id, comment])
-                .then(() => {
-                    console.log("comment aded", image);
-
-                    socket.emit("chatMessage", {
-                        first, last, comment, image
+                .then((results) => {
+                    let timestamp = results.rows[0].timestamp;
+                    io.sockets.emit("chatMessage", {
+                        first, last, comment, image, timestamp
                     });
                 });
         });

@@ -121,11 +121,14 @@ let getInitialChat = () => {
     return db.query(`SELECT users.id, first, last, image, comment, chat.timestamp
                     FROM users
                     JOIN chat
-                    ON user_id = users.id;`, null, (err, results) => {
+                    ON user_id = users.id
+                    ORDER BY chat.timestamp DESC
+                    LIMIT 10;`, null, (err, results) => {
             if(err) {
                 console.log(err);
             } else {
-                return results;
+                let array = results.rows.reverse();
+                return array;
             }
         });
 };

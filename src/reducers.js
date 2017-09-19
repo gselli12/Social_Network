@@ -74,8 +74,6 @@ export default function(state = {}, action) {
         });
     }
     if(action.type == "NEW_COMMENT") {
-        console.log("state.chat", state.chat);
-        console.log("action.comment", action.comment);
         state = Object.assign({}, state, {
             chat: state.chat ? [...state.chat, action.comment] : [action.comment]
         });
