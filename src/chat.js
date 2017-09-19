@@ -1,7 +1,9 @@
 import React from "react";
 import { connect } from 'react-redux';
-import {readComment, addNewComment} from "./actions";
+import {readComment} from "./actions";
 import {socket} from "./socket";
+import {Link} from 'react-router';
+
 
 
 class Chat extends React.Component {
@@ -32,8 +34,13 @@ class Chat extends React.Component {
         var chatToDisplay;
         if(chat) {
             chatToDisplay = chat.map((com) => {
-                let {first, last, comment, image, timestamp} = com;
-                return <div className = "comment"><img className ="profilePic large-pic" src={image}/>{first}: {comment} at {timestamp}</div>;
+                let {first, last, comment, image, timestamp, id} = com;
+                return <div className = "comment">
+                    <Link to ={"/user/" + id}>
+                        <img className ="profilePic large-pic" src={image}/>
+                    </Link>
+                    {first}: {comment} at {timestamp}
+                </div>;
             });
         }
 

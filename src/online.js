@@ -19,7 +19,7 @@ class Online extends React.Component {
                     <Link to = {"/user/"+ id}>
                         <div className = "online-user">
                             <img className ="profilePic large-pic" src ={image} />
-                            <div className ="name-online">{first} {last}</div>
+                            <div className ="name-online">{first}</div>
                         </div>
                     </Link>
                 );

@@ -26,11 +26,11 @@ textarea {
 }
 
 .profilePic {
-    position: absolute;
+    /*position: absolute;*/
     height: 150px;
     width: 150px;
-    right: 20px;
-    top: 20px;
+    /*right: 20px;
+    top: 20px;*/
     border-radius: 100px;
 }
 
@@ -146,4 +146,13 @@ textarea {
     position: absolute;
     left: 20px;
     top: 10px;
+}
+
+.ownProfile {
+    left: 85%;
+    margin-right: 10px;
+}
+
+.friendlist {
+    margin-top: 100px;
 }

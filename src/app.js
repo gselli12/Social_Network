@@ -115,10 +115,13 @@ export class App extends React.Component {
                     </div>
 
                     <Logo />
-                    <ProfilePic
-                        showUploader = {this.showUploader}
-                        image = {this.state.image}
-                    />
+                    <div className = "column ownProfile">
+                        <ProfilePic
+                            showUploader = {this.showUploader}
+                            image = {this.state.image}
+                        />
+                        <Link to="/me">See your profile</Link>
+                    </div>
                 </header>
 
                 {children}

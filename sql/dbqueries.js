@@ -49,13 +49,15 @@ var updateBio = (data) => {
 };
 
 var getOtherUserData = (id) => {
-    return db.query("SELECT image, first, last, bio FROM users WHERE id = ($1);", id, (err, results) => {
-        if(err) {
-            console.log(err);
-        } else {
-            return results;
-        }
-    });
+    return db.query(`SELECT image, first, last, bio
+        FROM users
+        WHERE id = ($1);`, id, (err, results) => {
+            if(err) {
+                console.log(err);
+            } else {
+                return results;
+            }
+        });
 };
 
 var checkFriendshipStatus = (data) => {
@@ -150,7 +152,6 @@ let getMatchingUsers = (data) => {
             if(err) {
                 console.log(err);
             } else {
-                console.log(results.rows);
                 return results.rows;
             }
         });

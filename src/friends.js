@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import{getFriends, acceptRequest, unfriend, rejectRequest} from './actions.js';
+import {Link} from 'react-router';
+
 
 
 class Friends extends React.Component {
@@ -33,8 +35,10 @@ class Friends extends React.Component {
                 let {id, first, last, image} = friend;
                 return (
                     <div className = "friend-single">
-                        <p>{first} {last}</p>
-                        <img src = {image} alt="" className="profilePic large-pic"/>
+                        <Link to={"/user/" + id}>
+                            <p>{first}</p>
+                            <img src = {image} alt="" className="profilePic large-pic"/>
+                        </Link>
                         <button onClick={() => this.unfriend(id)}>unfriend</button>
                     </div>
                 );
@@ -44,8 +48,10 @@ class Friends extends React.Component {
                 const {id, first, last, image} = pending;
                 return (
                     <div className ="pending-single">
-                        <p>{first} {last}</p>
-                        <img src = {image} className="profilePic large-pic" alt=""/>
+                        <Link to={"/user/" + id}>
+                            <p>{first}</p>
+                            <img src = {image} className="profilePic large-pic" alt=""/>
+                        </Link>
                         <button onClick={() => this.acceptFriendRequest(id)}>accept</button>
                         <button onClick = {() => this.rejectFriendRequest(id)}>reject</button>
                     </div>
@@ -54,10 +60,12 @@ class Friends extends React.Component {
 
         return(
             <div>
+
                 <h3>Pending Friend Requests</h3>
                 <div className="pending">
                     {myPendings}
                 </div>
+
 
                 <h3>These are your friends</h3>
                 <div className = "friends">

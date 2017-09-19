@@ -3,6 +3,12 @@ const {getOtherUserData, checkFriendshipStatus, getFriends, getUsersByIds, getIn
 
 var apiGETRoutes = (app, io) => {
 
+    // app.get("/user/:id", (req, res) => {
+    //     if(req.params.id == req.session.user.id) {
+    //         return res.redirect("/me");
+    //     }
+    // });
+
     app.get("/api/user", (req, res) => {
         const {id, first, last, bio, image} = req.session.user;
         res.json({
@@ -18,8 +24,9 @@ var apiGETRoutes = (app, io) => {
         let id = req.params.id;
         let data = [id, req.session.user.id];
 
+
         Promise.all([getOtherUserData([id]),
-            checkFriendshipStatus(data)])
+            checkFriendshipStatus(data), getFriends([id])])
 
             .then((results) => {
                 let {first, last, image, bio} = results[0].rows[0];
@@ -38,13 +45,27 @@ var apiGETRoutes = (app, io) => {
                     }
                 }
 
+                let array = results[2].rows.filter(friend => {
+                    return friend.status == "FRIENDS";
+                });
+
+                let OPPfriends = [];
+                array.forEach((friend, id) => {
+                    OPPfriends[id] = {};
+                    OPPfriends[id].id = friend.id;
+                    OPPfriends[id].first = friend.first;
+                    OPPfriends[id].last = friend.last;
+                    OPPfriends[id].image = friend.image;
+                });
+
                 res.json({
                     first,
                     last,
                     image,
                     bio,
                     friendshipStatus,
-                    isSender
+                    isSender,
+                    OPPfriends
                 });
             });
     });
