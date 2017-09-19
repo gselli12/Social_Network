@@ -78,5 +78,15 @@ export default function(state = {}, action) {
             chat: state.chat ? [...state.chat, action.comment] : [action.comment]
         });
     }
+    if(action.type == "USER_SEARCH") {
+        state = Object.assign({}, state, {
+            searchResults: action.searchResults
+        });
+    }
+    if(action.type == "CLEAR_SEARCHBAR") {
+        state = Object.assign({}, state, {
+            searchResults: null
+        });
+    }
     return state;
 }

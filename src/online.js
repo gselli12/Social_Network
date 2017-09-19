@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from 'react-redux';
+import {Link} from 'react-router';
 
 
 class Online extends React.Component {
@@ -13,9 +14,14 @@ class Online extends React.Component {
         var onlineUsers;
         if(users) {
             onlineUsers= Object.keys(users).map((user, i) => {
-                let {first, last, image} = users[user];
+                let {first, last, image, id} = users[user];
                 return (
-                    <div className = "online-user"><img className ="profilePic large-pic" src ={image} /><div className ="name-online">{first} {last}</div></div>
+                    <Link to = {"/user/"+ id}>
+                        <div className = "online-user">
+                            <img className ="profilePic large-pic" src ={image} />
+                            <div className ="name-online">{first} {last}</div>
+                        </div>
+                    </Link>
                 );
             });
         }

@@ -4,6 +4,8 @@ import {Logo} from './logo';
 import {ProfilePic} from './profilepic';
 import {PicUploader} from "./picUploader";
 import {getSocket} from "./socket";
+import Searchbar from "./searchbar";
+import {Link} from 'react-router';
 
 
 
@@ -104,7 +106,15 @@ export class App extends React.Component {
 
         return(
             <div>
-                <header><Logo />
+                <header>
+                    <div className = "column">
+                        <Link to="/">Home</Link>
+                        <Link to="/chat">Chat</Link>
+                        <Link to="/online">See who is online</Link>
+                        <Searchbar />
+                    </div>
+
+                    <Logo />
                     <ProfilePic
                         showUploader = {this.showUploader}
                         image = {this.state.image}

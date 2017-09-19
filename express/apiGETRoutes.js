@@ -1,4 +1,4 @@
-const {getOtherUserData, checkFriendshipStatus, getFriends, getUsersByIds, getInitialChat, addComment} = require("../sql/dbqueries.js");
+const {getOtherUserData, checkFriendshipStatus, getFriends, getUsersByIds, getInitialChat, addComment, getMatchingUsers} = require("../sql/dbqueries.js");
 
 
 var apiGETRoutes = (app, io) => {
@@ -64,6 +64,24 @@ var apiGETRoutes = (app, io) => {
                 });
                 res.json({
                     friends
+                });
+            });
+    });
+
+    app.get("/api/usersearch/:input", (req, res) => {
+        let input = req.params.input;
+        getMatchingUsers([input + "%"])
+            .then((results) => {
+                let searchResults = [];
+                results.rows.forEach((result, id) => {
+                    searchResults[id] = {};
+                    searchResults[id].id = result.id;
+                    searchResults[id].first = result.first;
+                    searchResults[id].last = result.last;
+                    searchResults[id].image = result.image;
+                });
+                res.json({
+                    searchResults
                 });
             });
     });

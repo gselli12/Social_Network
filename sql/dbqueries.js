@@ -143,6 +143,21 @@ let addComment = (data) => {
     });
 };
 
+let getMatchingUsers = (data) => {
+    return db.query(`SELECT first, last, image, id
+                    FROM users
+                    WHERE first ILIKE ($1);`, data, (err, results) => {
+            if(err) {
+                console.log(err);
+            } else {
+                console.log(results.rows);
+                return results.rows;
+            }
+        });
+};
+
+
+module.exports.getMatchingUsers = getMatchingUsers;
 module.exports.addComment = addComment;
 module.exports.getInitialChat = getInitialChat,
 module.exports.getUsersByIds = getUsersByIds;

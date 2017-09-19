@@ -90,3 +90,24 @@ export function newComment(comment) {
         comment
     };
 }
+
+export function getSearchResults (input) {
+    let request;
+    if(request) {
+        request.abort();
+    }
+    return request = axios.get("/api/usersearch/" + input)
+        .then(({data}) => {
+            let searchResults = data.searchResults;
+            return {
+                type: "USER_SEARCH",
+                searchResults
+            };
+        });
+}
+
+export function clearSearchbar () {
+    return {
+        type: "CLEAR_SEARCHBAR"
+    };
+}
