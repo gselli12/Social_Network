@@ -88,5 +88,15 @@ export default function(state = {}, action) {
             searchResults: null
         });
     }
+    if(action.type == "WRITING_POST") {
+        state = Object.assign({}, state, {
+            postWriting: action.post
+        });
+    }
+    if(action.type == "CHANGE_SUBMITTYPE") {
+        state = Object.assign({}, state, {
+            submitType: action.typeS
+        });
+    }
     return state;
 }

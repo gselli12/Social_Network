@@ -1,4 +1,4 @@
-const {getOtherUserData, checkFriendshipStatus, getFriends, getUsersByIds, getInitialChat, addComment, getMatchingUsers} = require("../sql/dbqueries.js");
+const {getOtherUserData, checkFriendshipStatus, getFriends, getUsersByIds, getInitialChat, addComment, getMatchingUsers, getWallposts} = require("../sql/dbqueries.js");
 
 
 var apiGETRoutes = (app, io) => {
@@ -24,7 +24,7 @@ var apiGETRoutes = (app, io) => {
             res.json({status: 204});
         } else {
             Promise.all([getOtherUserData([id]),
-                checkFriendshipStatus(data), getFriends([id])])
+                checkFriendshipStatus(data), getFriends([id]), getWallposts([id])])
 
                 .then((results) => {
                     let {first, last, image, bio} = results[0].rows[0];
@@ -56,6 +56,8 @@ var apiGETRoutes = (app, io) => {
                         OPPfriends[id].image = friend.image;
                     });
 
+                    let wallPosts = results[3].rows;
+
                     res.json({
                         first,
                         last,
@@ -63,7 +65,8 @@ var apiGETRoutes = (app, io) => {
                         bio,
                         friendshipStatus,
                         isSender,
-                        OPPfriends
+                        OPPfriends,
+                        wallPosts
                     });
                 });
         }

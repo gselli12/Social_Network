@@ -157,7 +157,35 @@ let getMatchingUsers = (data) => {
         });
 };
 
+let addWallPost = (data) => {
+    return db.query(`INSERT INTO wallposts (writer_id, profile_id, post, image, link) VALUES ($1, $2, $3, $4, $5)`, data, (err, results) => {
+        if(err) {
+            console.log(err);
+        } else {
+            return results;
+        }
+    });
+};
 
+let getWallposts = (id) => {
+    return db.query(`SELECT writer_id, post, first, last, users.image AS profile_pic, users.id, wallposts.timestamp, wallposts.image AS post_pic, link
+        FROM wallposts
+        JOIN users
+        ON wallposts.writer_id = users.id
+        WHERE wallposts.profile_id = ($1)
+        ORDER BY wallposts.timestamp DESC
+        LIMIT 10`, id, (err, results) => {
+            if(err) {
+                console.log(err);
+            } else {
+                return results;
+            }
+        });
+};
+
+
+module.exports.getWallposts = getWallposts;
+module.exports.addWallPost = addWallPost;
 module.exports.getMatchingUsers = getMatchingUsers;
 module.exports.addComment = addComment;
 module.exports.getInitialChat = getInitialChat,

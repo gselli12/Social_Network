@@ -1,6 +1,7 @@
-
+var rp = require('request-promise');
+const cheerio = require('cheerio');
 const {hashPassword, checkPassword} = require("../Config/hashing.js");
-const {updatePic, addNewUser, getHash, updateBio, newFriendRequest, changeFriendshipStatus, addComment} = require("../sql/dbqueries.js");
+const {updatePic, addNewUser, getHash, updateBio, newFriendRequest, changeFriendshipStatus, addComment, addWallPost, addImageToWall} = require("../sql/dbqueries.js");
 const {uploadToS3, uploader} = require("../express/middleware.js");
 
 const fs = require('fs');
@@ -122,6 +123,31 @@ var postRoutes = (app) => {
             });
     });
 
+    app.post("/api/user/wallpost/:id", (req, res) => {
+        const {first, last, profileId, image, postWriting, submitType} = req.body.post;
+        const writerId = req.session.user.id;
+        let data = [writerId, profileId, postWriting, "none"];
+        console.log(submitType);
+        if(submitType == "text" || submitType == undefined) {
+            console.log("text");
+            addWallPost(data);
+        } else if(submitType == "link") {
+            var htmlBody;
+            var link = postWriting;
+            rp(link)
+                .then(resp => {
+                    htmlBody = resp;
+                    const $ = cheerio.load(htmlBody);
+                    let title = $('meta[property="og:title"]').attr("content");
+                    let image = $('meta[property="og:image"]').attr("content");
+                    let description = $('meta[property="og:description"]').attr("content");
+                    let post = title + "\n" + description;
+                    let data = [writerId, profileId, post, image, link];
+                    addWallPost(data);
+                });
+        }
+    });
+
 
     app.post("/user/:id/:friendshipbutton", (req, res) => {
         var request = req.params.friendshipbutton;
@@ -167,6 +193,8 @@ var postRoutes = (app) => {
                 });
         }
     });
+
+
 
 
 };

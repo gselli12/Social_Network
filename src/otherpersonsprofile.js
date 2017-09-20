@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import {FriendButton} from './friendbutton';
 import {Link, browserHistory} from 'react-router';
+import Wallposts from "./wallpost";
 
 export class OtherPersonsProfile extends React.Component{
     constructor(props) {
@@ -19,11 +20,11 @@ export class OtherPersonsProfile extends React.Component{
 
         axios.get("/api/user/"+id)
             .then((data) => {
-                
+
                 if(data.data.status == 204) {
                     browserHistory.push("/me");
                 } else {
-                    const {first, last, image, bio, friendshipStatus, isSender, OPPfriends} = data.data;
+                    const {first, last, image, bio, friendshipStatus, isSender, OPPfriends, wallPosts} = data.data;
                     this.friendshipStatus = friendshipStatus;
                     this.isSender = isSender;
                     this.setState({
@@ -31,7 +32,8 @@ export class OtherPersonsProfile extends React.Component{
                         last,
                         bio,
                         image,
-                        OPPfriends
+                        OPPfriends,
+                        wallPosts
                     });
 
                 }
@@ -41,7 +43,7 @@ export class OtherPersonsProfile extends React.Component{
         this.componentWillMount(nextProps.params.id);
     }
     render() {
-        let {first, last, image, bio, OPPfriends} = this.state;
+        let {first, last, image, bio, OPPfriends, wallPosts} = this.state;
         let {friendshipStatus, isSender} = this;
         let id = this.props.params.id;
 
@@ -57,6 +59,8 @@ export class OtherPersonsProfile extends React.Component{
                 </Link>;
             });
         }
+
+        let wallpostsToRender = <Wallposts first={first} last={last} image={image} id={id} wallPosts={wallPosts}/>
 
         return(
             <div className = "profile">
@@ -78,11 +82,17 @@ export class OtherPersonsProfile extends React.Component{
                     }
 
                     {friendshipStatus == "FRIENDS" &&
-                    <div className="friendlist">
-                        <h3>Here are {first}'s friends':</h3>
-                        {OPPfriendsToRender}
+                    <div>
+                        <div>
+                            {wallpostsToRender}
+                        </div>
+                        <div className="friendlist">
+                            <h3>Here are {first}'s friends':</h3>
+                            {OPPfriendsToRender}
+                        </div>
                     </div>
                     }
+
 
                 </div>
 

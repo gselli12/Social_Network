@@ -111,3 +111,24 @@ export function clearSearchbar () {
         type: "CLEAR_SEARCHBAR"
     };
 }
+
+export function readWallpost(post) {
+    return {
+        type: "WRITING_POST",
+        post
+    };
+}
+
+export function submitWallpost(post) {
+    return axios.post("/api/user/wallpost/:id", {
+        type: "SUBMITING_POST",
+        post
+    });
+}
+
+export function changeSubmitType(typeS) {
+    return {
+        type: "CHANGE_SUBMITTYPE",
+        typeS
+    };
+}
