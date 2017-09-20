@@ -108,7 +108,6 @@ export class App extends React.Component {
             <div>
                 <header>
                     <div className = "column">
-                        <Link to="/">Home</Link>
                         <Link to="/chat">Chat</Link>
                         <Link to="/online">See who is online</Link>
                         <Searchbar />
@@ -121,6 +120,7 @@ export class App extends React.Component {
                             image = {this.state.image}
                         />
                         <Link to="/me">See your profile</Link>
+                        <Link to="/">Manage Friends</Link>
                     </div>
                 </header>
 

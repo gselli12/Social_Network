@@ -9,7 +9,7 @@ export function Profile(props) {
         <div className ="profile">
             <div className = "large-pic"><ProfilePic image = {image} /></div>
             <div className="info-profile">
-                <p>{first} {last}</p>
+                <p>{first}</p>
                 <Bio bio = {bio}
                     editBioIsVisible = {editBioIsVisible}
                     updateBio = {updateBio}

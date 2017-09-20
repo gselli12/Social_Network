@@ -44,8 +44,6 @@ var postRoutes = (app) => {
 
     app.post("/login" , (req, res) => {
 
-
-
         let {email, pw} = req.body;
 
         getHash([email])

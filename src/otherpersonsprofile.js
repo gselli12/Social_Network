@@ -1,42 +1,49 @@
 import React from 'react';
 import axios from 'axios';
 import {FriendButton} from './friendbutton';
-import {Link} from 'react-router';
-
+import {Link, browserHistory} from 'react-router';
 
 export class OtherPersonsProfile extends React.Component{
     constructor(props) {
         super(props);
         this.state = {};
     }
-    getData() {
-        let id = this.props.params.id;
+    componentWillMount(newId) {
+        var id;
+
+        if(newId) {
+            id = newId;
+        } else {
+            id = this.props.params.id;
+        }
+
         axios.get("/api/user/"+id)
             .then((data) => {
-                const {first, last, image, bio, friendshipStatus, isSender, OPPfriends} = data.data;
-                this.friendshipStatus = friendshipStatus;
-                this.isSender = isSender;
-                this.setState({
-                    first,
-                    last,
-                    bio,
-                    image,
-                    OPPfriends
-                });
+                
+                if(data.data.status == 204) {
+                    browserHistory.push("/me");
+                } else {
+                    const {first, last, image, bio, friendshipStatus, isSender, OPPfriends} = data.data;
+                    this.friendshipStatus = friendshipStatus;
+                    this.isSender = isSender;
+                    this.setState({
+                        first,
+                        last,
+                        bio,
+                        image,
+                        OPPfriends
+                    });
+
+                }
             });
     }
-
-    componentDidMount() {
-        this.getData();
-    }
-    componentWillReceiveProps() {
-        this.getData();
+    componentWillReceiveProps(nextProps) {
+        this.componentWillMount(nextProps.params.id);
     }
     render() {
         let {first, last, image, bio, OPPfriends} = this.state;
         let {friendshipStatus, isSender} = this;
         let id = this.props.params.id;
-        console.log(friendshipStatus);
 
         let OPPfriendsToRender;
         if(OPPfriends) {
