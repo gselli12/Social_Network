@@ -126,14 +126,15 @@ var postRoutes = (app) => {
     app.post("/api/user/wallpost/:id", (req, res) => {
         const {first, last, profileId, image, postWriting, submitType} = req.body.post;
         const writerId = req.session.user.id;
-        let data = [writerId, profileId, postWriting, "none"];
-        console.log(submitType);
+        let data = [writerId, profileId, postWriting, "none", "none"];
+
         if(submitType == "text" || submitType == undefined) {
             console.log("text");
             addWallPost(data);
         } else if(submitType == "link") {
             var htmlBody;
             var link = postWriting;
+
             rp(link)
                 .then(resp => {
                     htmlBody = resp;

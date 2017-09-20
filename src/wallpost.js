@@ -1,6 +1,8 @@
 import React from "react";
 import { connect } from 'react-redux';
 import {readWallpost, submitWallpost, changeSubmitType} from "./actions.js";
+import {Link} from 'react-router';
+
 
 class Wallposts extends React.Component{
     constructor(props) {
@@ -18,14 +20,18 @@ class Wallposts extends React.Component{
         console.log(e.target.value);
     }
     submitWallpost(e) {
+
         if(e.keyCode == 13) {
             const {first, last, id, image, postWriting, submitType} = this.props;
-            this.props.dispatch(submitWallpost({first,
+            this.props.dispatch(submitWallpost({
+                first,
                 last,
                 profileId: id,
                 image,
                 postWriting,
-                submitType}));
+                submitType
+            })
+            );
             e.target.value = "";
         }
 
@@ -36,8 +42,19 @@ class Wallposts extends React.Component{
             const {wallPosts} = this.props;
             wallPostsToRender = wallPosts.map(wallpost => {
                 let {first, profile_pic, post_pic, post, timestamp, link} = wallpost;
-                return <div><img className="small-pic" src={profile_pic}/>{first}:  {post}
-                    <img src={post_pic}/>  {link}at {timestamp}</div>;
+
+                if(link == "none") {
+                    return <div><img className="small-pic" src={profile_pic}/>{first} at {timestamp}: <br/>  {post}</div> ;
+                } else {
+                    return <div><img className="small-pic" src={profile_pic}/> {first} at {timestamp}: <br/>
+                        <a target="_blank" href={link}>
+                            <div className ="link-summary">
+                                {post}
+                                <img className = "link-pic" src={post_pic}/>
+                            </div>
+                        </a>
+                    </div>;
+                }
             });
         }
 
