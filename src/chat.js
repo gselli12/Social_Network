@@ -39,7 +39,7 @@ class Chat extends React.Component {
                     <Link to ={"/user/" + id}>
                         <img className ="profilePic large-pic" src={image}/>
                     </Link>
-                    {first}: {comment} at {timestamp}
+                    <div className="comment-text">{first}: {comment} at {timestamp}</div>
                 </div>;
             });
         }

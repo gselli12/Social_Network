@@ -139,9 +139,24 @@ var postRoutes = (app) => {
                 .then(resp => {
                     htmlBody = resp;
                     const $ = cheerio.load(htmlBody);
-                    let title = $('meta[property="og:title"]').attr("content");
-                    let image = $('meta[property="og:image"]').attr("content");
-                    let description = $('meta[property="og:description"]').attr("content");
+                    var image, title, description;
+
+                    if($('meta[property="og:title"]').attr("content")){
+                        title = $('meta[property="og:title"]').attr("content");
+                    } else {
+                        title = $('title')[0].children[0].data;
+                    }
+                    if($('meta[property="og:image"]').attr("content")) {
+                        image = $('meta[property="og:image"]').attr("content");
+                    } else {
+                        image = "no image";
+                    }
+                    if($('meta[property="og:description"]').attr("content")) {
+                        description = $('meta[property="og:description"]').attr("content");
+                    } else {
+                        description = $('h1')[0].children[0].data;
+                    }
+
                     let post = title + "\n" + description;
                     let data = [writerId, profileId, post, image, link];
                     addWallPost(data);

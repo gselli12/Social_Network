@@ -36,13 +36,14 @@ export class App extends React.Component {
     componentDidMount() {
         axios.get("/api/user")
             .then((data) => {
-                const {first, last, id, bio, image} = data.data;
+                const {first, last, id, bio, image, wallPosts} = data.data;
                 this.setState({
                     image,
                     first,
                     last,
                     id,
-                    bio
+                    bio,
+                    wallPosts
                 });
             });
     }
@@ -89,7 +90,7 @@ export class App extends React.Component {
     }
     render() {
         getSocket();
-        const {id, image, first, last, bio, editBioIsVisible} = this.state;
+        const {id, image, first, last, bio, editBioIsVisible, wallPosts} = this.state;
         const children = React.cloneElement(this.props.children, {
             profile : {
                 id,
@@ -100,7 +101,8 @@ export class App extends React.Component {
                 editBioIsVisible,
                 showEditBio: this.showEditBio,
                 readInput: this.readInput,
-                updateBio: this.updateBio
+                updateBio: this.updateBio,
+                wallPosts
             }
         });
 

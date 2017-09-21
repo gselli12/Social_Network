@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import {ProfilePic} from './profilepic';
 import {FriendButton} from './friendbutton';
 import {Link, browserHistory} from 'react-router';
 import Wallposts from "./wallpost";
@@ -60,43 +61,45 @@ export class OtherPersonsProfile extends React.Component{
             });
         }
 
-        let wallpostsToRender = <Wallposts first={first} last={last} image={image} id={id} wallPosts={wallPosts}/>
+        let wallpostsToRender = <Wallposts first={first} last={last} image={image} id={id} wallPosts={wallPosts}/>;
 
         return(
-            <div className = "profile">
+            <div>
+                <div className = "profile">
 
-                <img
-                    className = "profilePic large-pic"
-                    src = {image}
-                />
-                <div className="info-profile">
-                    <p>{first}</p>
-                    <p>{bio}</p>
+                    <div className = "large-pic" style={{left: "20%"}}><ProfilePic image = {image} /></div>
+                    <div className="info-profile" style={{marginLeft: "20%"}}>
+                        <p>{first}</p>
+                        <p>{bio}</p>
 
-                    {this.state.first &&
+                        {this.state.first &&
                         <FriendButton
                             id={id}
                             friendshipStatus = {friendshipStatus}
                             isSender = {isSender}
                         />
-                    }
+                        }
 
-                    {friendshipStatus == "FRIENDS" &&
+                    </div>
+                </div>
+
+
+                {friendshipStatus == "FRIENDS" &&
                     <div>
-                        <div>
-                            {wallpostsToRender}
-                        </div>
+
+                        <div className="wallposts-opp">{wallpostsToRender}</div>
+
                         <div className="friendlist">
                             <h3>Here are {first}'s friends':</h3>
                             {OPPfriendsToRender}
                         </div>
                     </div>
-                    }
-
-
-                </div>
-
+                }
             </div>
+
+
+
+
 
 
         );

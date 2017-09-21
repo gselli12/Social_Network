@@ -3,17 +3,21 @@ const {getOtherUserData, checkFriendshipStatus, getFriends, getUsersByIds, getIn
 
 var apiGETRoutes = (app, io) => {
 
-
-
     app.get("/api/user", (req, res) => {
         const {id, first, last, bio, image} = req.session.user;
-        res.json({
-            id,
-            first,
-            last,
-            image,
-            bio
-        });
+        getWallposts([id])
+            .then((results) => {
+                const wallPosts = results.rows;
+                res.json({
+                    id,
+                    first,
+                    last,
+                    image,
+                    bio,
+                    wallPosts
+                });
+            });
+
     });
 
     app.get("/api/user/:id", (req, res) => {

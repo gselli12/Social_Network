@@ -25,6 +25,18 @@ textarea {
     margin-top: 30px;
 }
 
+select {
+    background-color: red;
+    width: 100px;
+    height: 40px;
+    font-family: Pokemon;
+    font-size: 10px;
+    border-radius: 20px;
+    margin-top: 40px;
+    margin-right: 20px;
+
+}
+
 .logo {
     position: relative;
     height: 200px;
@@ -134,10 +146,22 @@ textarea {
     height: 600px;
     overflow-y: scroll;
     background-color: white;
+    text-align: left;
+}
+
+.comment {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.comment-text {
+    margin-left: 50px;
 }
 
 .user-search-results {
-    max-width: 200px;
+    margin-left: 18px;
+    max-width: 235px;
     background-color: white;
 }
 
@@ -178,4 +202,35 @@ textarea {
 .link-summary {
     display: flex;
     flex-direction: row;
+}
+
+.input-wallpost {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.wallposts-opp {
+    margin-left: 15%;
+}
+
+.wallposts-div {
+    margin-top: 50px;
+    width: 80%;
+    left: 20%;
+}
+
+.wallposts {
+    width: 100%;
+    max-height: 600px;
+    left: 15%;
+    background-color: white;
+    overflow-y: scroll;
+    text-align: left;
+}
+
+.wallpost {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }

@@ -41,32 +41,37 @@ class Wallposts extends React.Component{
         if(this.props.wallPosts) {
             const {wallPosts} = this.props;
             wallPostsToRender = wallPosts.map(wallpost => {
-                let {first, profile_pic, post_pic, post, timestamp, link} = wallpost;
+                let {first, profile_pic, post_pic, post, timestamp, link, writer_id} = wallpost;
 
                 if(link == "none") {
-                    return <div><img className="small-pic" src={profile_pic}/>{first} at {timestamp}: <br/>  {post}</div> ;
+                    return <div className="wallpost"><Link to={"/user/"+writer_id}><img className="small-pic" src={profile_pic}/></Link><div>{first} at {timestamp}: <br/>  {post}</div></div> ;
                 } else {
-                    return <div><img className="small-pic" src={profile_pic}/> {first} at {timestamp}: <br/>
-                        <a target="_blank" href={link}>
-                            <div className ="link-summary">
-                                {post}
-                                <img className = "link-pic" src={post_pic}/>
-                            </div>
-                        </a>
+                    return <div className="wallpost">
+                        <Link to={"/user/"+writer_id}><img className="small-pic" src={profile_pic}/></Link>
+                        <div> {first} at {timestamp}: <br/>
+                            <a target="_blank" href={link}>
+                                <div className ="link-summary">
+                                    {post}
+                                    <img className = "link-pic" src={post_pic}/>
+                                </div>
+                            </a>
+                        </div>
                     </div>;
                 }
             });
         }
 
         return (
-            <div>
+            <div className="wallposts-div">
                 <h3>{this.props.first}'s wall</h3>
-                <select onChange = {this.changeSubmitType}>
-                    <option value="text">Text</option>
-                    <option value="link">Link</option>
-                </select>
-                <textarea rows="4" cols="30" onKeyDown= {this.submitWallpost} onChange= {this.handleChange}></textarea>
-                {wallPostsToRender}
+                <div className="input-wallpost">
+                    <select onChange = {this.changeSubmitType}>
+                        <option value="text">Text</option>
+                        <option value="link">Link</option>
+                    </select>
+                    <textarea rows="4" cols="90" onKeyDown= {this.submitWallpost} onChange= {this.handleChange}></textarea>
+                </div>
+                <div className = "wallposts">{wallPostsToRender}</div>
             </div>
         );
     }
