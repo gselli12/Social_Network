@@ -3,7 +3,7 @@ const compression = require('compression');
 const bodyParser = require('body-parser');
 const csurf = require("csurf");
 const knox = require('knox');
-var secrets;
+var secrets = {};
 if(process.env.AWS_SECRET) {
     secrets.AWS_KEY = process.env.AWS_KEY;
     secrets.AWS_SECRET = process.env.AWS_SECRET;
