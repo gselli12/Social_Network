@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 
 export function PicUploader({handleChange, uploadImage, closeUploader}) {
     return (

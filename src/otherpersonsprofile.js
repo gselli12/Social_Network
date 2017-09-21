@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import axios from './axios';
 import {ProfilePic} from './profilepic';
 import {FriendButton} from './friendbutton';
 import {Link, browserHistory} from 'react-router';
