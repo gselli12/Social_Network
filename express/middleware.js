@@ -3,7 +3,13 @@ const compression = require('compression');
 const bodyParser = require('body-parser');
 const csurf = require("csurf");
 const knox = require('knox');
-let secrets = require('../secrets.json');
+var secrets;
+if(process.env.AWS_SECRET) {
+    secrets.AWS_KEY = process.env.AWS_KEY;
+    secrets.AWS_SECRET = process.env.AWS_SECRET;
+} else {
+    secrets = require('../secrets.json');
+}
 var multer = require('multer');
 var uidSafe = require('uid-safe');
 var path = require('path');
