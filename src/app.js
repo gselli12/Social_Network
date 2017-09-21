@@ -2,7 +2,7 @@ import React from 'react';
 import axios from './axios';
 import {Logo} from './logo';
 import {ProfilePic} from './profilepic';
-import {PicUploader} from "./picUploader";
+import {PicUploader} from "./picuploader";
 import {getSocket} from "./socket";
 import Searchbar from "./searchbar";
 import {Link} from 'react-router';
