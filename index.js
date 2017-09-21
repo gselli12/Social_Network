@@ -11,7 +11,7 @@ const {apiGETRoutes} = require("./express/apiGETRoutes.js");
 //MIDDLEWARE
 app.use(express.static(__dirname + "/public"));
 
-if (process.env.NODE_ENV != 'production') {
+if (!process.env.PORT) {
     app.use("/bundle.js", require("http-proxy-middleware")({
         target: 'http://localhost:8081/'
     }));
@@ -56,6 +56,6 @@ app.get('*', function(req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
-server.listen(process.env.PORT|| 8080, function() {
+server.listen(process.env.PORT || 8080, function() {
     console.log("Listening on port 8080");
 });
