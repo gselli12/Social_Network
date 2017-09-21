@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS users CASCADE;
 
 CREATE TABLE users(
     id SERIAL PRIMARY KEY,
@@ -6,7 +6,7 @@ CREATE TABLE users(
     last VARCHAR(200) NOT NULL,
     email VARCHAR(200) NOT NULL UNIQUE,
     pw VARCHAR(300) NOT NULL,
-    image VARCHAR(300) DEFAULT 'defaultProfilePic.jpg',
+    image VARCHAR(300) DEFAULT 'https://mypracticesn.s3.amazonaws.com/defaultProfilePic.jpg',
     bio VARCHAR(300),
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
