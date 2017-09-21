@@ -19,6 +19,7 @@ if (!process.env.PORT) {
     app.use(require('./build'));
 }
 
+
 middleware(app);
 console.log("middleware ran");
 
