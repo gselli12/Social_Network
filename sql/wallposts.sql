@@ -8,4 +8,4 @@ CREATE TABLE wallposts(
     image VARCHAR(300),
     link VARCHAR(300),
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)
+);

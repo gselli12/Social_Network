@@ -5,4 +5,4 @@ CREATE TABLE chat(
     user_id INTEGER REFERENCES users(id) NOT NULL,
     comment VARCHAR(300) NOT NULL,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)
+);

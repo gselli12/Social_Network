@@ -12,10 +12,11 @@ const {apiGETRoutes} = require("./express/apiGETRoutes.js");
 app.use(express.static(__dirname + "/public"));
 
 if (process.env.NODE_ENV != 'production') {
-    // app.use(require('./build'));
     app.use("/bundle.js", require("http-proxy-middleware")({
         target: 'http://localhost:8081/'
     }));
+} else {
+    app.use(require('./build'));
 }
 
 middleware(app);
@@ -55,6 +56,6 @@ app.get('*', function(req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
-server.listen(8080, function() {
+server.listen(process.env.PORT|| 8080, function() {
     console.log("Listening on port 8080");
 });
