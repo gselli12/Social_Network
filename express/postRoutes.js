@@ -129,7 +129,6 @@ var postRoutes = (app) => {
         let data = [writerId, profileId, postWriting, "none", "none"];
 
         if(submitType == "text" || submitType == undefined) {
-            console.log("text");
             addWallPost(data);
         } else if(submitType == "link") {
             var htmlBody;

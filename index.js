@@ -11,7 +11,7 @@ const {apiGETRoutes} = require("./express/apiGETRoutes.js");
 //MIDDLEWARE
 app.use(express.static(__dirname + "/public"));
 
-if (!process.env.PORT) {
+if (process.env.NODE_ENV != 'production') {
     app.use("/bundle.js", require("http-proxy-middleware")({
         target: 'http://localhost:8081/'
     }));
@@ -21,7 +21,6 @@ if (!process.env.PORT) {
 
 
 middleware(app);
-console.log("middleware ran");
 
 
 //ROUTES
@@ -46,10 +45,8 @@ app.get("/logout", (req, res) => {
 });
 
 apiGETRoutes(app, io);
-console.log("GET routes ran");
 
 postRoutes(app);
-console.log("POST routes ran");
 
 //KEEP this at the bottom:
 app.get('*', function(req, res) {
