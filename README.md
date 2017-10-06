@@ -24,6 +24,3 @@ Hosted on [Heroku](https://pokenetwork.herokuapp.com/welcome#/) (using the free 
 ![Pokenetwork Wallpost GIF](https://github.com/gselli12/social_network/blob/master/Images/gifWallposts.gif)
 * Users can search for other users registered.
 ![Pokenetwork User Search GIF](https://github.com/gselli12/social_network/blob/master/Images/gifSearch.gif)
-
-## Demo:
-![Pokenetwork GIF](https://github.com/gselli12/social_network/blob/master/Images/gifChat.gif)
