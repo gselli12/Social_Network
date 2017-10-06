@@ -13,7 +13,7 @@ Hosted on [Heroku](https://pokenetwork.herokuapp.com/welcome#/) (using the free 
 * AWS S3 for image storing
 * socket.io
 
-##Features:
+## Features:
 * Registration and login for new users (passwords are hashed and salted).
 * Users can upload profile pictures and change their bio's (which can only be seen by friends)
 * Users can befriend, unfriend and refriend each other.
